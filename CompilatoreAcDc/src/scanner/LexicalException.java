@@ -7,7 +7,7 @@ public class LexicalException extends Exception {
 
 	// Costruttori
     public LexicalException(String stringaErrore, int riga, char errore){
-        super(stringaErrore + ",r:" + riga + "c:" + errore);
+        super(stringaErrore + ",r:" + riga + ",c:" + errore);
         this.riga = riga;
         this.stringa = stringaErrore;
         this.errore = errore;

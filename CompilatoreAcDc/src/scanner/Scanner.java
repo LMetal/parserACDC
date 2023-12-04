@@ -14,7 +14,7 @@ import token.*;
 public class Scanner {
 	final char EOF = (char) -1; 
 	private int riga;
-	private PushbackReader buffer;
+	private final PushbackReader buffer;
 	private String log;
 
 	// skpChars: insieme caratteri di skip (include EOF) e inizializzazione
@@ -40,7 +40,7 @@ public class Scanner {
 
 		this.buffer = new PushbackReader(new FileReader(fileName));
 		riga = 1;
-		// inizializzare campi che non hanno inizializzazione
+
 		skpChars.add('\n');
 		skpChars.add(' ');
 		skpChars.add('\t');
@@ -92,23 +92,7 @@ public class Scanner {
 
 		// Se nextChar e' o in operators oppure 
 		// ritorna il Token associato con l'operatore o il delimitatore
-		if(charTypeMap.containsKey(nextChar)){
-			if(nextChar == '=')	{
-				readChar();
-				return new Token(TokenType.OP_ASS, riga, "=");
-			}
-			if(nextChar == ';'){
-				readChar();
-				return new Token(TokenType.SEMI, riga);
-			}
-			readChar();
-			if(peekChar() == '='){
-				readChar();
-				return new Token(TokenType.OP_ASS, riga, nextChar + "=");
-			}
-
-			return new Token(charTypeMap.get(nextChar), riga);
-		}
+		if(charTypeMap.containsKey(nextChar)) return scanOp();
 
 		// Se nextChar e' in numbers
 		// return scanNumber()
@@ -120,9 +104,7 @@ public class Scanner {
 
 		// Altrimenti il carattere NON E' UN CARATTERE LEGALE sollevate una
 		// eccezione lessicale dicendo la riga e il carattere che la hanno
-		// provocata. 
-
-
+		// provocata.
 		consumeAllAndException(new StringBuilder());
 
 		return null;
@@ -136,26 +118,13 @@ public class Scanner {
 		if(nextChar == '0'){
 			nextChar = consumeAdd(bufferNumber);
 
-			if(!digits.contains(nextChar) && nextChar != '.') return new Token(TokenType.INT, riga, bufferNumber.toString());
+			if(notInAlphabet(nextChar) || !digits.contains(nextChar) && nextChar != '.') return new Token(TokenType.INT, riga, bufferNumber.toString());
 
 			while(digits.contains(nextChar)){
 				nextChar = consumeAdd(bufferNumber);
 			}
 
-			if(nextChar == '.'){
-				nextChar = consumeAdd(bufferNumber);
-
-				while (digits.contains(nextChar)) {
-					nextChar = consumeAdd(bufferNumber);
-					numDecimali++;
-				}
-				if(letters.contains(nextChar) || numDecimali > 5){
-					consumeAllAndException(bufferNumber);
-				} else {
-					return new Token(TokenType.FLOAT, riga, bufferNumber.toString());
-				}
-
-			} else{
+			if(nextChar != '.'){
 				consumeAllAndException(bufferNumber);
 			}
 
@@ -164,31 +133,30 @@ public class Scanner {
 				nextChar = consumeAdd(bufferNumber);
 			}
 
-			if(letters.contains(nextChar)){
+			if(notInAlphabet(nextChar) || letters.contains(nextChar)){
 				consumeAllAndException(bufferNumber);
 			}
 
-			if(nextChar == '.'){
-				nextChar = consumeAdd(bufferNumber);
-
-				while (digits.contains(nextChar)) {
-					if(numDecimali >= 5) consumeAllAndException(bufferNumber);
-
-					nextChar = consumeAdd(bufferNumber);
-					numDecimali++;
-				}
-				if(letters.contains(nextChar)) consumeAllAndException(bufferNumber);
-
-				return new Token(TokenType.FLOAT, riga, bufferNumber.toString());
-			} else {
+			if(nextChar != '.'){
 				if(letters.contains(nextChar)) consumeAllAndException(bufferNumber);
 				else return new Token(TokenType.INT, riga, bufferNumber.toString());
 			}
 		}
 
 
+		//il numero ha un punto
+		nextChar = consumeAdd(bufferNumber);
 
-		return null;
+		while (digits.contains(nextChar)) {
+			if(numDecimali >= 5) consumeAllAndException(bufferNumber);
+
+			nextChar = consumeAdd(bufferNumber);
+			numDecimali++;
+		}
+		if(notInAlphabet(nextChar) || letters.contains(nextChar) || nextChar == '.') consumeAllAndException(bufferNumber);
+
+		return new Token(TokenType.FLOAT, riga, bufferNumber.toString());
+
 	}
 
 
@@ -199,12 +167,31 @@ public class Scanner {
 		while(letters.contains(nextChar)){
 			nextChar = consumeAdd(bufferLetters);
 		}
-		if(!(charTypeMap.containsKey(nextChar) || keyWordsMap.containsKey(nextChar) || skpChars.contains(nextChar))){
+		if(!(charTypeMap.containsKey(nextChar) || skpChars.contains(nextChar))){
 			consumeAllAndException(bufferLetters);
 		}
 
 		if(keyWordsMap.containsKey(bufferLetters.toString())) return new Token(keyWordsMap.get(bufferLetters.toString()), riga);
 		else return new Token(TokenType.ID, riga, bufferLetters.toString());
+	}
+
+	private Token scanOp() throws IOException {
+		char nextChar = peekChar();
+
+		if(nextChar == '=')	{
+			readChar();
+			return new Token(TokenType.OP_ASS, riga, "=");
+		}
+		if(nextChar == ';'){
+			readChar();
+			return new Token(TokenType.SEMI, riga);
+		}
+		readChar();
+		if(peekChar() == '=') {
+			readChar();
+			return new Token(TokenType.OP_ASS, riga, nextChar + "=");
+		}
+		return new Token(charTypeMap.get(nextChar), riga);
 	}
 
 	private void consumeAllAndException(StringBuilder buffer) throws IOException, LexicalException {
@@ -214,7 +201,7 @@ public class Scanner {
 		if(!(skpChars.contains(nextChar) || charTypeMap.containsKey(nextChar))) errore = nextChar;
 		else errore = '_';
 
-		while (!(keyWordsMap.containsKey(nextChar) || skpChars.contains(nextChar))){
+		while (!(charTypeMap.containsKey(nextChar) || skpChars.contains(nextChar))){
 			buffer.append(nextChar);
 			readChar();
 			nextChar = peekChar();
@@ -225,6 +212,10 @@ public class Scanner {
 	private char consumeAdd(StringBuilder s) throws IOException {
 		s.append(readChar());
 		return peekChar();
+	}
+
+	private boolean notInAlphabet(char c){
+		return !letters.contains(c) && !numbers.contains(c) && !charTypeMap.containsKey(c) && !skpChars.contains(c) && c != '.';
 	}
 
 	private char readChar() throws IOException {

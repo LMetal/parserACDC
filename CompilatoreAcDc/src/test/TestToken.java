@@ -15,13 +15,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 class TestToken {
-	void test(Token t, int riga, TokenType type, String val) throws LexicalException, IOException {
+	void test(Token t, int riga, TokenType type, String val) {
 		assertEquals("<" + type + ",r:" +riga+ ","+ val + ">", t.toString());
 		assertEquals(riga, t.getRiga());
-		//assertEquals(type, t.getTipo());
+		assertEquals(type, t.getTipo());
 		assertEquals(val, t.getVal());
 	}
-	void test(Token t, int riga, TokenType type) throws LexicalException, IOException {
+	void test(Token t, int riga, TokenType type) {
 		assertEquals("<" + type + ",r:" +riga+ ">", t.toString());
 		assertEquals(riga, t.getRiga());
 		assertEquals(type, t.getTipo());
@@ -37,14 +37,14 @@ class TestToken {
 
 	void testException(Scanner s, String val, int riga, char errore) {
 		LexicalException ex = assertThrows(LexicalException.class, s::nextToken);
-		assertEquals(val + ",r:" + riga + "c:" + errore, ex.getMessage());
+		assertEquals(val + ",r:" + riga + ",c:" + errore, ex.getMessage());
 		assertEquals(val, ex.getValue());
 		assertEquals(riga, ex.getRiga());
 		assertEquals(errore, ex.getErrore());
 	}
 
 	@Test
-	void testToken() throws LexicalException, IOException {
+	void testToken() {
 		Token t1 = new Token(INT, 1, "3");
 		test(t1, 1, INT, "3");
 
@@ -100,7 +100,6 @@ class TestToken {
 		s.nextToken();
 
 		testException(s, "v1r", 5, '1');
-		testException(s, "var[", 6, '[');
 	}
 
 	@Test
@@ -134,10 +133,6 @@ class TestToken {
 		testNext(s, 11, SEMI);
 
 		testNext(s, 11, OP_ASS, "=");
-
-		testException(s, "?", 11, '?');
-
-		testException(s, "%", 11, '%');
 
 		testNext(s, 11, EOF);
 	}
@@ -201,6 +196,10 @@ class TestToken {
 		testException(s, "12.a", 3, 'a');
 
 		testException(s, "123.121212", 4, '2');
+
+		testException(s, "11..", 5, '.');
+
+		testException(s, "22.2.", 6, '.');
 	}
 
 	@Test
@@ -244,5 +243,33 @@ class TestToken {
 
 		testNext(s, 7, EOF);
 
+	}
+
+	@Test
+	void testAlfabeto() throws IOException, LexicalException {
+		Scanner s = new Scanner("test/data/testScanner/testAlphabet.txt");
+
+		testException(s, "74(", 1, '(');
+
+		testException(s, "?", 3, '?');
+
+		testException(s, "%", 3, '%');
+
+		testNext(s, 3, OP_ASS, "=");
+
+		testException(s, "var[", 4, '[');
+
+		testException(s, "12._", 6, '_');
+
+		testException(s, "12.44#", 7, '#');
+
+		testException(s, "0.|", 8, '|');
+		testException(s, "6&..", 8, '&');
+
+		testNext(s, 10, PLUS);
+		testException(s, "^var^", 10, '^');
+		testNext(s, 10, PLUS);
+
+		testException(s, "()", 12, '(');
 	}
 }
