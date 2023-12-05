@@ -12,6 +12,12 @@ public class LexicalException extends Exception {
         this.stringa = stringaErrore;
         this.errore = errore;
     }
+    public LexicalException(String stringaErrore, int riga){
+        super(stringaErrore + ",r:" + riga);
+        this.riga = riga;
+        this.stringa = stringaErrore;
+        this.errore = '_';
+    }
 
     public String getValue(){
         return this.stringa;

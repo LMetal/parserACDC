@@ -74,7 +74,9 @@ class TestToken {
 		s.nextToken();
 
 		ex = assertThrows(LexicalException.class, s::nextToken);
-		assertEquals("v1r,r:5,c:1", ex.getMessage());
+		assertEquals("v1,r:5,c:1", ex.getMessage());
+
+		assertEquals("<ID,r:5,r>",s.nextToken().toString());
 	}
 
 	@Test
@@ -161,17 +163,23 @@ class TestToken {
 	void testErroriNumbers() throws FileNotFoundException {
 		Scanner s = new Scanner("CompilatoreAcDc/src/test/data/testScanner/erroriNumbers.txt");
 
-		testException(s, "00", 1, '_');
+		LexicalException ex = assertThrows(LexicalException.class, s::nextToken);
+		assertEquals("00,r:1", ex.getMessage());
 
-		testException(s, "123a", 2, 'a');
+		ex = assertThrows(LexicalException.class, s::nextToken);
+		assertEquals("123a,r:2,c:a", ex.getMessage());
 
-		testException(s, "12.a", 3, 'a');
+		ex = assertThrows(LexicalException.class, s::nextToken);
+		assertEquals("12.a,r:3,c:a", ex.getMessage());
 
-		testException(s, "123.121212", 4, '2');
+		ex = assertThrows(LexicalException.class, s::nextToken);
+		assertEquals("123.121212,r:4,c:2", ex.getMessage());
 
-		testException(s, "11..", 5, '.');
+		ex = assertThrows(LexicalException.class, s::nextToken);
+		assertEquals("11..,r:5,c:.", ex.getMessage());
 
-		testException(s, "22.2.", 6, '.');
+		ex = assertThrows(LexicalException.class, s::nextToken);
+		assertEquals("22.2.,r:6,c:.", ex.getMessage());
 	}
 
 	@Test
