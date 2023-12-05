@@ -138,8 +138,7 @@ public class Scanner {
 			}
 
 			if(nextChar != '.'){
-				if(letters.contains(nextChar)) consumeAllAndException(bufferNumber);
-				else return new Token(TokenType.INT, riga, bufferNumber.toString());
+				return new Token(TokenType.INT, riga, bufferNumber.toString());
 			}
 		}
 
@@ -202,9 +201,7 @@ public class Scanner {
 		else errore = '_';
 
 		while (!(charTypeMap.containsKey(nextChar) || skpChars.contains(nextChar))){
-			buffer.append(nextChar);
-			readChar();
-			nextChar = peekChar();
+			nextChar = consumeAdd(buffer);
 		}
 		throw new LexicalException(buffer.toString(), riga, errore);
 	}

@@ -54,13 +54,13 @@ class TestToken {
 
 	@Test
 	void testFileEOF() throws IOException, LexicalException {
-		Scanner s = new Scanner("test/data/testScanner/testEOF.txt");
+		Scanner s = new Scanner("CompilatoreAcDc/src/test/data/testScanner/testEOF.txt");
 		testNext(s, 5, EOF);
 	}
 
 	@Test
 	void testFileKeyWords() throws IOException, LexicalException {
-		Scanner s = new Scanner("test/data/testScanner/testIdKeyWords.txt");
+		Scanner s = new Scanner("CompilatoreAcDc/src/test/data/testScanner/testIdKeyWords.txt");
 		Token t = s.nextToken();
 		test(t, 1, TYPE_INT);
 
@@ -91,7 +91,7 @@ class TestToken {
 
 	@Test
 	void testErroriID() throws IOException, LexicalException {
-		Scanner s = new Scanner("test/data/testScanner/erroriID");
+		Scanner s = new Scanner("CompilatoreAcDc/src/test/data/testScanner/erroriID");
 		s.nextToken();
 		s.nextToken();
 
@@ -104,7 +104,7 @@ class TestToken {
 
 	@Test
 	void testOperatori() throws IOException, LexicalException {
-		Scanner s = new Scanner("test/data/testScanner/testOperators.txt");
+		Scanner s = new Scanner("CompilatoreAcDc/src/test/data/testScanner/testOperators.txt");
 
 		testNext(s, 1, PLUS);
 
@@ -140,7 +140,7 @@ class TestToken {
 
 	@Test
 	void testFLOAT() throws IOException, LexicalException {
-		Scanner s = new Scanner("test/data/testScanner/testFLOAT.txt");
+		Scanner s = new Scanner("CompilatoreAcDc/src/test/data/testScanner/testFLOAT.txt");
 
 		testNext(s, 2, FLOAT, "098.8095");
 		testNext(s, 3, FLOAT, "0.");
@@ -151,7 +151,7 @@ class TestToken {
 
 	@Test
 	void testInt() throws IOException, LexicalException {
-		Scanner s = new Scanner("test/data/testScanner/testINT.txt");
+		Scanner s = new Scanner("CompilatoreAcDc/src/test/data/testScanner/testINT.txt");
 
 		testNext(s, 2, INT, "698");
 
@@ -164,7 +164,7 @@ class TestToken {
 
 	@Test
 	void testIntErrori() throws FileNotFoundException {
-		Scanner s = new Scanner("test/data/testScanner/erroriINT.txt");
+		Scanner s = new Scanner("CompilatoreAcDc/src/test/data/testScanner/erroriINT.txt");
 
 		testException(s, "123r", 3, 'r');
 
@@ -187,7 +187,7 @@ class TestToken {
 
 	@Test
 	void testErroriNumbers() throws FileNotFoundException {
-		Scanner s = new Scanner("test/data/testScanner/erroriNumbers.txt");
+		Scanner s = new Scanner("CompilatoreAcDc/src/test/data/testScanner/erroriNumbers.txt");
 
 		testException(s, "00", 1, '_');
 
@@ -204,7 +204,7 @@ class TestToken {
 
 	@Test
 	void testGenerale() throws IOException, LexicalException {
-		Scanner s = new Scanner("test/data/testScanner/testGenerale.txt");
+		Scanner s = new Scanner("CompilatoreAcDc/src/test/data/testScanner/testGenerale.txt");
 
 		/*
 		int temp;
@@ -247,7 +247,7 @@ class TestToken {
 
 	@Test
 	void testAlfabeto() throws IOException, LexicalException {
-		Scanner s = new Scanner("test/data/testScanner/testAlphabet.txt");
+		Scanner s = new Scanner("CompilatoreAcDc/src/test/data/testScanner/testAlphabet.txt");
 
 		testException(s, "74(", 1, '(');
 
