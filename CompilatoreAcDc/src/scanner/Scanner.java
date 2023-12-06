@@ -126,8 +126,7 @@ public class Scanner {
 
 			if(nextChar != '.'){
 				if(!skpChars.contains(nextChar)){
-					bufferNumber.append(readChar());
-					throw new LexicalException(bufferNumber.toString(), riga, nextChar);
+					consumeAllAndException(bufferNumber);
 				}
 
 				throw new LexicalException(bufferNumber.toString(), riga);
@@ -206,10 +205,7 @@ public class Scanner {
 
 	private void consumeAllAndException(StringBuilder buffer) throws IOException, LexicalException {
 		char nextChar = peekChar();
-		char errore;
-
-		if(!(skpChars.contains(nextChar) || charTypeMap.containsKey(nextChar))) errore = nextChar;
-		else errore = '_';
+		char errore = peekChar();
 
 		while (!(charTypeMap.containsKey(nextChar) || skpChars.contains(nextChar))){
 			nextChar = consumeAdd(buffer);
