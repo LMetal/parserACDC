@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.ToLongBiFunction;
 
-import org.w3c.dom.css.CSSFontFaceRule;
 import token.*;
 
 public class Scanner {
