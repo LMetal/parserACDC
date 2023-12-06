@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.ToLongBiFunction;
 
 import org.w3c.dom.css.CSSFontFaceRule;
 import token.*;
@@ -17,6 +18,7 @@ public class Scanner {
 	private int riga;
 	private final PushbackReader buffer;
 	private String log;
+	private Token token;
 
 	// skpChars: insieme caratteri di skip (include EOF) e inizializzazione
 	// letters: insieme lettere e inizializzazione
@@ -65,6 +67,11 @@ public class Scanner {
 	}
 
 	public Token nextToken() throws IOException, LexicalException {
+		if(token != null) {
+			Token toReturn = token;
+			token = null;
+			return toReturn;
+		}
 
 		// nextChar contiene il prossimo carattere dell'input (non consumato).
 		char nextChar = peekChar(); //Catturate l'eccezione IOException e 
@@ -109,6 +116,11 @@ public class Scanner {
 		consumeAllAndException(new StringBuilder());
 
 		return null;
+	}
+
+	public Token peekToken() throws LexicalException, IOException {
+		if(token == null)token = nextToken();
+		return token;
 	}
 
 	private Token scanNumber() throws IOException, LexicalException {
