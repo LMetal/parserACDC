@@ -15,7 +15,7 @@ public class Scanner {
 	final char EOF = (char) -1; 
 	private int riga;
 	private final PushbackReader buffer;
-	private String log;
+	//private String log;
 	private Token token;
 
 	// skpChars: insieme caratteri di skip (include EOF) e inizializzazione
@@ -111,9 +111,7 @@ public class Scanner {
 		// Altrimenti il carattere NON E' UN CARATTERE LEGALE sollevate una
 		// eccezione lessicale dicendo la riga e il carattere che la hanno
 		// provocata.
-		consumeAllAndException(new StringBuilder());
-
-		return null;
+		throw new LexicalException(String.valueOf(nextChar), riga, readChar());
 	}
 
 	public Token peekToken() throws LexicalException, IOException {
@@ -135,8 +133,9 @@ public class Scanner {
 			}
 
 			if(nextChar != '.'){
-				if(!skpChars.contains(nextChar)){
-					consumeAllAndException(bufferNumber);
+				if(letters.contains(nextChar)){
+					bufferNumber.append(nextChar);
+					throw new LexicalException(bufferNumber.toString(), riga, readChar());
 				}
 
 				throw new LexicalException(bufferNumber.toString(), riga);
@@ -148,8 +147,9 @@ public class Scanner {
 				nextChar = consumeAdd(bufferNumber);
 			}
 
-			if(notInAlphabet(nextChar) || letters.contains(nextChar)){
-				consumeAllAndException(bufferNumber);
+			if(letters.contains(nextChar)){
+				bufferNumber.append(nextChar);
+				throw new LexicalException(bufferNumber.toString(), riga, readChar());
 			}
 
 			if(nextChar != '.'){
@@ -169,7 +169,10 @@ public class Scanner {
 			nextChar = consumeAdd(bufferNumber);
 			numDecimali++;
 		}
-		if(notInAlphabet(nextChar) || letters.contains(nextChar) || nextChar == '.') consumeAllAndException(bufferNumber);
+		if(letters.contains(nextChar) || nextChar == '.') {
+			bufferNumber.append(nextChar);
+			throw new LexicalException(bufferNumber.toString(), riga, readChar());
+		}
 
 		return new Token(TokenType.FLOAT, riga, bufferNumber.toString());
 	}

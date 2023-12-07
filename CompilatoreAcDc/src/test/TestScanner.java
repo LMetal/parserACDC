@@ -116,7 +116,7 @@ public class TestScanner {
     }
 
     @Test
-    void testIntErrori() throws FileNotFoundException {
+    void testIntErrori() throws IOException, LexicalException {
         Scanner s = new Scanner("CompilatoreAcDc"+ File.separator +"src"+ File.separator +"test"+ File.separator +"data"+ File.separator +"testScanner"+ File.separator +"erroriINT.txt");
         LexicalException ex;
 
@@ -124,7 +124,8 @@ public class TestScanner {
         assertEquals("123r,r:3,c:r", ex.getMessage());
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("12s3,r:4,c:s", ex.getMessage());
+        assertEquals("12s,r:4,c:s", ex.getMessage());
+        s.nextToken();
 
         ex = assertThrows(LexicalException.class, s::nextToken);
         assertEquals("7y,r:5,c:y", ex.getMessage());
@@ -136,7 +137,8 @@ public class TestScanner {
         assertEquals("00p,r:7,c:p", ex.getMessage());
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("00p0,r:8,c:p", ex.getMessage());
+        assertEquals("00p,r:8,c:p", ex.getMessage());
+        s.nextToken();
 
         ex = assertThrows(LexicalException.class, s::nextToken);
         assertEquals("070,r:9", ex.getMessage());
@@ -169,6 +171,9 @@ public class TestScanner {
 
         ex = assertThrows(LexicalException.class, s::nextToken);
         assertEquals("22.2.,r:6,c:.", ex.getMessage());
+
+        ex = assertThrows(LexicalException.class, s::nextToken);
+        assertEquals("22e,r:7,c:e", ex.getMessage());
     }
 
     @Test
@@ -219,8 +224,9 @@ public class TestScanner {
         Scanner s = new Scanner("CompilatoreAcDc"+ File.separator +"src"+ File.separator +"test"+ File.separator +"data"+ File.separator +"testScanner"+ File.separator +"testAlphabet.txt");
         LexicalException ex;
 
+        assertEquals("<INT,r:1,74>", s.nextToken().toString());
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("74(,r:1,c:(", ex.getMessage());
+        assertEquals("(,r:1,c:(", ex.getMessage());
 
         ex = assertThrows(LexicalException.class, s::nextToken);
         assertEquals("?,r:3,c:?", ex.getMessage());
@@ -235,25 +241,42 @@ public class TestScanner {
         ex = assertThrows(LexicalException.class, s::nextToken);
         assertEquals("[,r:4,c:[", ex.getMessage());
 
-        ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("12._,r:6,c:_", ex.getMessage());
 
+        assertEquals("<FLOAT,r:6,12.>", s.nextToken().toString());
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("12.44#,r:7,c:#", ex.getMessage());
+        assertEquals("_,r:6,c:_", ex.getMessage());
 
+        assertEquals("<FLOAT,r:7,12.44>", s.nextToken().toString());
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("0.|,r:8,c:|", ex.getMessage());
+        assertEquals("#,r:7,c:#", ex.getMessage());
 
+        s.nextToken();
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("6&..,r:8,c:&", ex.getMessage());
+        assertEquals("|,r:8,c:|", ex.getMessage());
+
+        s.nextToken();
+        ex = assertThrows(LexicalException.class, s::nextToken);
+        assertEquals("&,r:8,c:&", ex.getMessage());
+        ex = assertThrows(LexicalException.class, s::nextToken);
+        assertEquals(".,r:8,c:.", ex.getMessage());
+        ex = assertThrows(LexicalException.class, s::nextToken);
+        assertEquals(".,r:8,c:.", ex.getMessage());
 
         assertEquals("<PLUS,r:10>", s.nextToken().toString());
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("^var^,r:10,c:^", ex.getMessage());
+        assertEquals("^,r:10,c:^", ex.getMessage());
+
+        s.nextToken(); //var
+
+        ex = assertThrows(LexicalException.class, s::nextToken);
+        assertEquals("ù,r:10,c:ù", ex.getMessage());
         assertEquals("<PLUS,r:10>", s.nextToken().toString());
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("(),r:12,c:(", ex.getMessage());
+        assertEquals("(,r:12,c:(", ex.getMessage());
+
+        ex = assertThrows(LexicalException.class, s::nextToken);
+        assertEquals("),r:12,c:)", ex.getMessage());
     }
 
     @Test
