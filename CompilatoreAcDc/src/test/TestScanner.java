@@ -11,16 +11,17 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestScanner {
+    String testPath = "CompilatoreAcDc"+ File.separator +"src"+ File.separator +"test"+ File.separator +"data"+ File.separator +"testScanner"+ File.separator;
 
     @Test
     void testFileEOF() throws IOException, LexicalException {
-        Scanner s = new Scanner("CompilatoreAcDc"+ File.separator +"src"+ File.separator +"test"+ File.separator +"data"+ File.separator +"testScanner"+ File.separator +"testEOF.txt");
+        Scanner s = new Scanner(testPath +"testEOF.txt");
         assertEquals("<EOF,r:5>", s.nextToken().toString());
     }
 
     @Test
     void testFileKeyWords() throws IOException, LexicalException {
-        Scanner s = new Scanner("CompilatoreAcDc"+ File.separator +"src"+ File.separator +"test"+ File.separator +"data"+ File.separator +"testScanner"+ File.separator +"testIdKeyWords.txt");
+        Scanner s = new Scanner(testPath +"testIdKeyWords.txt");
 
         assertEquals("<TYPE_INT,r:1>", s.nextToken().toString());
 
@@ -43,7 +44,7 @@ public class TestScanner {
 
     @Test
     void testErroriID() throws IOException, LexicalException {
-        Scanner s = new Scanner("CompilatoreAcDc"+ File.separator +"src"+ File.separator +"test"+ File.separator +"data"+ File.separator +"testScanner"+ File.separator +"erroriID");
+        Scanner s = new Scanner(testPath +"erroriID");
         s.nextToken();
         s.nextToken();
 
@@ -60,7 +61,7 @@ public class TestScanner {
 
     @Test
     void testOperatori() throws IOException, LexicalException {
-        Scanner s = new Scanner("CompilatoreAcDc"+ File.separator +"src"+ File.separator +"test"+ File.separator +"data"+ File.separator +"testScanner"+ File.separator +"testOperators.txt");
+        Scanner s = new Scanner(testPath +"testOperators.txt");
 
         assertEquals("<PLUS,r:1>", s.nextToken().toString());
 
@@ -96,7 +97,7 @@ public class TestScanner {
 
     @Test
     void testFLOAT() throws IOException, LexicalException {
-        Scanner s = new Scanner("CompilatoreAcDc"+ File.separator +"src"+ File.separator +"test"+ File.separator +"data"+ File.separator +"testScanner"+ File.separator +"testFLOAT.txt");
+        Scanner s = new Scanner(testPath +"testFLOAT.txt");
 
         assertEquals("<FLOAT,r:2,098.8095>", s.nextToken().toString());
         assertEquals("<FLOAT,r:3,0.>", s.nextToken().toString());
@@ -107,7 +108,7 @@ public class TestScanner {
 
     @Test
     void testInt() throws IOException, LexicalException {
-        Scanner s = new Scanner("CompilatoreAcDc"+ File.separator +"src"+ File.separator +"test"+ File.separator +"data"+ File.separator +"testScanner"+ File.separator +"testINT.txt");
+        Scanner s = new Scanner(testPath +"testINT.txt");
 
         assertEquals("<INT,r:2,698>", s.nextToken().toString());
         assertEquals("<INT,r:4,560099>", s.nextToken().toString());
@@ -117,7 +118,7 @@ public class TestScanner {
 
     @Test
     void testIntErrori() throws IOException, LexicalException {
-        Scanner s = new Scanner("CompilatoreAcDc"+ File.separator +"src"+ File.separator +"test"+ File.separator +"data"+ File.separator +"testScanner"+ File.separator +"erroriINT.txt");
+        Scanner s = new Scanner(testPath +"erroriINT.txt");
         LexicalException ex;
 
         ex = assertThrows(LexicalException.class, s::nextToken);
@@ -152,7 +153,7 @@ public class TestScanner {
 
     @Test
     void testErroriNumbers() throws FileNotFoundException {
-        Scanner s = new Scanner("CompilatoreAcDc"+ File.separator +"src"+ File.separator +"test"+ File.separator +"data"+ File.separator +"testScanner"+ File.separator +"erroriNumbers.txt");
+        Scanner s = new Scanner(testPath +"erroriNumbers.txt");
 
         LexicalException ex = assertThrows(LexicalException.class, s::nextToken);
         assertEquals("00,r:1", ex.getMessage());
@@ -178,7 +179,7 @@ public class TestScanner {
 
     @Test
     void testGenerale() throws IOException, LexicalException {
-        Scanner s = new Scanner("CompilatoreAcDc"+ File.separator +"src"+ File.separator +"test"+ File.separator +"data"+ File.separator +"testScanner"+ File.separator +"testGenerale.txt");
+        Scanner s = new Scanner(testPath +"testGenerale.txt");
 
 		/*
 		int temp;
@@ -221,7 +222,7 @@ public class TestScanner {
 
     @Test
     void testAlfabeto() throws IOException, LexicalException {
-        Scanner s = new Scanner("CompilatoreAcDc"+ File.separator +"src"+ File.separator +"test"+ File.separator +"data"+ File.separator +"testScanner"+ File.separator +"testAlphabet.txt");
+        Scanner s = new Scanner(testPath +"testAlphabet.txt");
         LexicalException ex;
 
         assertEquals("<INT,r:1,74>", s.nextToken().toString());
@@ -281,7 +282,7 @@ public class TestScanner {
 
     @Test
     void testPeekToken() throws IOException, LexicalException {
-        Scanner s = new Scanner("CompilatoreAcDc"+ File.separator +"src"+ File.separator +"test"+ File.separator +"data"+ File.separator +"testScanner"+ File.separator +"testFLOAT.txt");
+        Scanner s = new Scanner(testPath +"testFLOAT.txt");
 
         assertEquals("<FLOAT,r:2,098.8095>", s.peekToken().toString());
         assertEquals("<FLOAT,r:2,098.8095>", s.nextToken().toString());

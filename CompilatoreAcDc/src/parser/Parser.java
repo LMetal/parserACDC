@@ -45,7 +45,6 @@ public class Parser {
             }
 
             case EOF -> {    // DSs -> ϵ
-                match(TokenType.EOF);
             }
 
             default -> throw new SyntacticException("TYPE_INT, TYPE_FLOAT, ID, PRINT, EOF", t.getRiga(), t.getTipo());
@@ -76,6 +75,7 @@ public class Parser {
             case OP_ASS -> {                    //DclP -> opAss Exp
                 match(TokenType.OP_ASS);
                 parseExp();
+                match(TokenType.SEMI);
             }
 
             default -> throw new SyntacticException("SEMI, OP_ASS", t.getRiga(), t.getTipo());
@@ -86,15 +86,16 @@ public class Parser {
         Token t = scanner.peekToken();
 
         switch (t.getTipo()){
-            case PRINT -> {     // Stm -> print id ;
-                match(TokenType.PRINT);
-                match(TokenType.ID);
-                match(TokenType.SEMI);
-            }
             case ID -> {        // Stm -> id opAss Exp
                 match(TokenType.ID);
                 match(TokenType.OP_ASS);
                 parseExp();
+                match(TokenType.SEMI);
+            }
+
+            case PRINT -> {     // Stm -> print id ;
+                match(TokenType.PRINT);
+                match(TokenType.ID);
                 match(TokenType.SEMI);
             }
 
@@ -130,8 +131,7 @@ public class Parser {
                 parseExpP();
             }
 
-            case SEMI -> {
-
+            case SEMI -> {  // ExpP ->
             }
 
             default -> throw new SyntacticException("PLUS, MINUS", t.getRiga(), t.getTipo());
@@ -142,7 +142,7 @@ public class Parser {
         Token t = scanner.peekToken();
 
         switch (t.getTipo()){
-            case ID, FLOAT, INT -> {
+            case ID, FLOAT, INT -> {    // Tr -> Val TrP
                 parseVal();
                 parseTrP();
             }
