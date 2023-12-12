@@ -1,34 +1,24 @@
 package scanner;
 
+import java.io.IOException;
+
 public class LexicalException extends Exception {
-	private final int riga;
-    private final String stringa;
-    private final char errore;
+
 
 	// Costruttori
     public LexicalException(String stringaErrore, int riga, char errore){
         super(stringaErrore + ",r:" + riga + ",c:" + errore);
-        this.riga = riga;
-        this.stringa = stringaErrore;
-        this.errore = errore;
+
     }
     public LexicalException(String stringaErrore, int riga){
         super(stringaErrore + ",r:" + riga);
-        this.riga = riga;
-        this.stringa = stringaErrore;
-        this.errore = '_';
+
     }
 
-    public String getValue(){
-        return this.stringa;
+    public LexicalException(String stringaErrore, Throwable cause) {
+        super(stringaErrore, cause);
+
     }
 
-    public int getRiga(){
-        return this.riga;
-    }
-
-    public char getErrore(){
-        return this.errore;
-    }
 
 }

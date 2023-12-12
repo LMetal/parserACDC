@@ -65,6 +65,8 @@ public class Scanner {
 	}
 
 	public Token nextToken() throws IOException, LexicalException {
+		char nextChar;
+
 		if(token != null) {
 			Token toReturn = token;
 			token = null;
@@ -72,7 +74,11 @@ public class Scanner {
 		}
 
 		// nextChar contiene il prossimo carattere dell'input (non consumato).
-		char nextChar = peekChar(); //Catturate l'eccezione IOException e 
+		try{
+			nextChar = peekChar(); //Catturate l'eccezione IOException e
+		}catch (IOException e){
+			throw new LexicalException("Errore IO alla riga: " + riga, e);
+		}
 		       // ritornate una LexicalException che la contiene
 
 		// Avanza nel buffer leggendo i carattere in skipChars
@@ -114,8 +120,12 @@ public class Scanner {
 		throw new LexicalException(String.valueOf(nextChar), riga, readChar());
 	}
 
-	public Token peekToken() throws LexicalException, IOException {
-		if(token == null)token = nextToken();
+	public Token peekToken() throws LexicalException {
+		try{
+			if(token == null)token = nextToken();
+		} catch (IOException e){
+			throw new LexicalException("Errore IO alla riga: " + riga, e);
+		}
 		return token;
 	}
 
@@ -140,7 +150,6 @@ public class Scanner {
 
 				throw new LexicalException(bufferNumber.toString(), riga);
 			}
-			return scanFloat(bufferNumber);
 
 		} else {
 			while (digits.contains(nextChar)){
@@ -155,8 +164,8 @@ public class Scanner {
 			if(nextChar != '.'){
 				return new Token(TokenType.INT, riga, bufferNumber.toString());
 			}
-			return scanFloat(bufferNumber);
 		}
+		return scanFloat(bufferNumber);
 	}
 
 	private Token scanFloat(StringBuilder bufferNumber) throws IOException, LexicalException {
