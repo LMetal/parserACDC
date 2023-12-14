@@ -11,4 +11,8 @@ public class SyntacticException extends Throwable {
     public SyntacticException(String expectedType, int riga, TokenType foundType) {
         super("Expected type: {" + expectedType + "} at row " + riga + " but got "+ foundType);
     }
+
+    public SyntacticException(String stringaErrore, Throwable cause) {
+        super(stringaErrore, cause);
+    }
 }

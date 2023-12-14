@@ -14,8 +14,12 @@ public class Parser {
         this.scanner = s;
     }
 
-    public void parse() throws LexicalException, SyntacticException, IOException {
-        this.parsePrg();
+    public void parse() throws SyntacticException {
+        try {
+            this.parsePrg();
+        } catch (LexicalException | IOException e) {
+            throw new SyntacticException(e.getMessage(), e);
+        }
     }
 
     private void parsePrg() throws LexicalException, SyntacticException, IOException {

@@ -1,0 +1,5 @@
+float i = 0;
+
+i += 13;
+
+int var1 = 0;

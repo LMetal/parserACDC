@@ -20,12 +20,12 @@ public class TestException {
         s.nextToken();
 
         LexicalException ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("nome1,r:3,c:1", ex.getMessage());
+        assertEquals("Unexpected character in Token: nome1, at row: 3, unexpected character: 1", ex.getMessage());
 
         s.nextToken();
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("v1,r:5,c:1", ex.getMessage());
+        assertEquals("Unexpected character in Token: v1, at row: 5, unexpected character: 1", ex.getMessage());
 
     }
 }

@@ -49,12 +49,12 @@ public class TestScanner {
         s.nextToken();
 
         LexicalException ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("nome1,r:3,c:1", ex.getMessage());
+        assertEquals("Unexpected character in Token: nome1, at row: 3, unexpected character: 1", ex.getMessage());
 
         s.nextToken();
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("v1,r:5,c:1", ex.getMessage());
+        assertEquals("Unexpected character in Token: v1, at row: 5, unexpected character: 1", ex.getMessage());
 
         assertEquals("<ID,r:5,r>",s.nextToken().toString());
     }
@@ -122,33 +122,33 @@ public class TestScanner {
         LexicalException ex;
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("123r,r:3,c:r", ex.getMessage());
+        assertEquals("Unexpected character in Token: 123r, at row: 3, unexpected character: r", ex.getMessage());
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("12s,r:4,c:s", ex.getMessage());
+        assertEquals("Unexpected character in Token: 12s, at row: 4, unexpected character: s", ex.getMessage());
         s.nextToken();
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("7y,r:5,c:y", ex.getMessage());
+        assertEquals("Unexpected character in Token: 7y, at row: 5, unexpected character: y", ex.getMessage());
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("00,r:7", ex.getMessage());
+        assertEquals("Unexpected character in Token: 00, at row: 7", ex.getMessage());
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("00p,r:7,c:p", ex.getMessage());
+        assertEquals("Unexpected character in Token: 00p, at row: 7, unexpected character: p", ex.getMessage());
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("00p,r:8,c:p", ex.getMessage());
+        assertEquals("Unexpected character in Token: 00p, at row: 8, unexpected character: p", ex.getMessage());
         s.nextToken();
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("070,r:9", ex.getMessage());
+        assertEquals("Unexpected character in Token: 070, at row: 9", ex.getMessage());
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("07p,r:10,c:p", ex.getMessage());
+        assertEquals("Unexpected character in Token: 07p, at row: 10, unexpected character: p", ex.getMessage());
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("000,r:11", ex.getMessage());
+        assertEquals("Unexpected character in Token: 000, at row: 11", ex.getMessage());
     }
 
     @Test
@@ -156,25 +156,25 @@ public class TestScanner {
         Scanner s = new Scanner(testPath +"erroriNumbers.txt");
 
         LexicalException ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("00,r:1", ex.getMessage());
+        assertEquals("Unexpected character in Token: 00, at row: 1", ex.getMessage());
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("123a,r:2,c:a", ex.getMessage());
+        assertEquals("Unexpected character in Token: 123a, at row: 2, unexpected character: a", ex.getMessage());
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("12.a,r:3,c:a", ex.getMessage());
+        assertEquals("Unexpected character in Token: 12.a, at row: 3, unexpected character: a", ex.getMessage());
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("123.121212,r:4,c:2", ex.getMessage());
+        assertEquals("Unexpected character in Token: 123.121212, at row: 4, unexpected character: 2", ex.getMessage());
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("11..,r:5,c:.", ex.getMessage());
+        assertEquals("Unexpected character in Token: 11.., at row: 5, unexpected character: .", ex.getMessage());
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("22.2.,r:6,c:.", ex.getMessage());
+        assertEquals("Unexpected character in Token: 22.2., at row: 6, unexpected character: .", ex.getMessage());
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("22e,r:7,c:e", ex.getMessage());
+        assertEquals("Unexpected character in Token: 22e, at row: 7, unexpected character: e", ex.getMessage());
     }
 
     @Test
@@ -227,57 +227,57 @@ public class TestScanner {
 
         assertEquals("<INT,r:1,74>", s.nextToken().toString());
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("(,r:1,c:(", ex.getMessage());
+        assertEquals("Unexpected character in Token: (, at row: 1, unexpected character: (", ex.getMessage());
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("?,r:3,c:?", ex.getMessage());
+        assertEquals("Unexpected character in Token: ?, at row: 3, unexpected character: ?", ex.getMessage());
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("%,r:3,c:%", ex.getMessage());
+        assertEquals("Unexpected character in Token: %, at row: 3, unexpected character: %", ex.getMessage());
 
         assertEquals("<OP_ASS,r:3,=>", s.nextToken().toString());
 
         s.nextToken();
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("[,r:4,c:[", ex.getMessage());
+        assertEquals("Unexpected character in Token: [, at row: 4, unexpected character: [", ex.getMessage());
 
 
         assertEquals("<FLOAT,r:6,12.>", s.nextToken().toString());
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("_,r:6,c:_", ex.getMessage());
+        assertEquals("Unexpected character in Token: _, at row: 6, unexpected character: _", ex.getMessage());
 
         assertEquals("<FLOAT,r:7,12.44>", s.nextToken().toString());
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("#,r:7,c:#", ex.getMessage());
+        assertEquals("Unexpected character in Token: #, at row: 7, unexpected character: #", ex.getMessage());
 
         s.nextToken();
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("|,r:8,c:|", ex.getMessage());
+        assertEquals("Unexpected character in Token: |, at row: 8, unexpected character: |", ex.getMessage());
 
         s.nextToken();
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("&,r:8,c:&", ex.getMessage());
+        assertEquals("Unexpected character in Token: &, at row: 8, unexpected character: &", ex.getMessage());
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals(".,r:8,c:.", ex.getMessage());
+        assertEquals("Unexpected character in Token: ., at row: 8, unexpected character: .", ex.getMessage());
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals(".,r:8,c:.", ex.getMessage());
+        assertEquals("Unexpected character in Token: ., at row: 8, unexpected character: .", ex.getMessage());
 
         assertEquals("<PLUS,r:10>", s.nextToken().toString());
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("^,r:10,c:^", ex.getMessage());
+        assertEquals("Unexpected character in Token: ^, at row: 10, unexpected character: ^", ex.getMessage());
 
         s.nextToken(); //var
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("ù,r:10,c:ù", ex.getMessage());
+        assertEquals("Unexpected character in Token: ù, at row: 10, unexpected character: ù", ex.getMessage());
         assertEquals("<PLUS,r:10>", s.nextToken().toString());
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("(,r:12,c:(", ex.getMessage());
+        assertEquals("Unexpected character in Token: (, at row: 12, unexpected character: (", ex.getMessage());
 
         ex = assertThrows(LexicalException.class, s::nextToken);
-        assertEquals("),r:12,c:)", ex.getMessage());
+        assertEquals("Unexpected character in Token: ), at row: 12, unexpected character: )", ex.getMessage());
     }
 
     @Test
