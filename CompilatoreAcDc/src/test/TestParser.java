@@ -190,4 +190,22 @@ public class TestParser {
         assertEquals("Expected type: {TYPE_INT, TYPE_FLOAT, ID, PRINT, EOF} at row 1 but got SEMI", ex.getMessage());
     }
 
+    @Test
+    void testMoreEcc7() throws IOException {
+        Scanner s = new Scanner(testPath + "moreEcc7.txt");
+        Parser p = new Parser(s);
+
+        SyntacticException ex = assertThrows(SyntacticException.class, p::parse);
+        assertEquals("Unexpected character in Token: ', at row: 1, unexpected character: '", ex.getMessage());
+    }
+
+    @Test
+    void testMoreEcc8() throws IOException {
+        Scanner s = new Scanner(testPath + "moreEcc8.txt");
+        Parser p = new Parser(s);
+
+        SyntacticException ex = assertThrows(SyntacticException.class, p::parse);
+        assertEquals("Expected string: {=} at row 1 but got +=", ex.getMessage());
+    }
+
 }

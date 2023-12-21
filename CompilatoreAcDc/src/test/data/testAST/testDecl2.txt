@@ -1,0 +1,3 @@
+float k = 7 / a + b;
+
+float k = 7.25 / a + b + c * 9;

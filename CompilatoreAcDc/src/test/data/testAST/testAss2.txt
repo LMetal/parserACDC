@@ -1,0 +1,6 @@
+int a = 1 + 2;
+float x = a + 7.25;
+float y = 5.0 + k;
+
+int v = 1 - 2;
+int v = 1 - k;

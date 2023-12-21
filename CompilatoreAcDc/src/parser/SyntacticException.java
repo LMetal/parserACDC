@@ -15,4 +15,8 @@ public class SyntacticException extends Throwable {
     public SyntacticException(String stringaErrore, Throwable cause) {
         super(stringaErrore, cause);
     }
+
+    public SyntacticException(String expectedString, int riga, String foundString) {
+        super("Expected string: {" + expectedString + "} at row " + riga + " but got "+ foundString);
+    }
 }

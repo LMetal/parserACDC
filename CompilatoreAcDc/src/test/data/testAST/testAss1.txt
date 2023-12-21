@@ -1,0 +1,5 @@
+var = 8;
+int pippo = 7;
+float pluto = 7.;
+
+a = b;
