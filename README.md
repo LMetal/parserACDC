@@ -19,7 +19,7 @@ A variable must be declared before it can be used (in an expression).
 
 Declarations: float or int followed by a variable and optionally initialized.
 
-Expressions that can be literals (integers or floating point numbers), variables, or expression <br>op</br> expression, where op (binary operator) can be +, -, *, and /.
+Expressions that can be literals (integers or floating point numbers), variables, or expression op expression, where op (binary operator) can be +, -, *, and /.
 
 The operands of a binary expression must have the same type.
 An int expression can be automatically converted to a float (if necessary), and no other conversions are possible.
