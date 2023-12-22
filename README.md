@@ -1,16 +1,16 @@
 A compiler capable of analizing a written file and compiling from ac to dc -> https://linux.die.net/man/1/dc
 
-Source ac code                dc compiled code
-
-int tempa;
-
-tempa = 5 ;                   5 sa 0 k
-
-float tempb = tempa / 3.2;    la 5 k 3.2 / sb 0 k
-
-tempb += 7;                   lb 7 5 k + sb 0 k
-
-print tempb;                  lb p P
+Source ac code              | dc compiled code
+----------------------------|----------------------
+int tempa;                  |
+----------------------------|----------------------
+tempa = 5 ;                 | 5 sa 0 k
+----------------------------|----------------------
+float tempb = tempa / 3.2;  | la 5 k 3.2 / sb 0 k
+----------------------------|----------------------
+tempb += 7;                 | lb 7 5 k + sb 0 k
+----------------------------|----------------------
+print tempb;                | lb p P
 
 
 In AC we have:
