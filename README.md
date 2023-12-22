@@ -27,3 +27,9 @@ An int expression can be automatically converted to a float (if necessary), and 
 Assignment and print statements, with the following syntax:
 - assignment: variable = expression, or variable op= expression
 - print: print variable
+
+Java classes are defined for these :
+- The Lexical Analysis of 'ac'
+- the Syntactic Analysis of 'ac' along with the construction of the Abstract Syntax Tree (our compiler will be in 2 phases)
+- those for performing the Semantic Analysis, which in our case will be Type Checking, and finally
+- the Code Generation of 'dc'. These last two phases will be carried out based on the program's AST.
