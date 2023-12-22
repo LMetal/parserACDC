@@ -12,4 +12,9 @@ public class NodeConst extends NodeExpr{
     public String toString(){
         return "<CONST: " + type + " " + value + ">";
     }
+
+    @Override
+    public String toStringConcise() {
+        return value;
+    }
 }

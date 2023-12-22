@@ -1,14 +1,18 @@
 package AST;
 
-import token.Token;
-
 public class NodeId extends NodeAST{
     private final String name;
-    public NodeId(Token t){
-        this.name = t.getVal();
+    public NodeId(String id){
+        this.name = id;
     }
 
+    @Override
     public String toString(){
         return "<ID: " + name+">";
+    }
+
+    @Override
+    public String toStringConcise() {
+        return name;
     }
 }

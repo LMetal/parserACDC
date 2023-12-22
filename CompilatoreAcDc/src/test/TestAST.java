@@ -153,4 +153,38 @@ public class TestAST {
         assertEquals("<ASSIGN: <ID: a> <BINOP: <ID: a> MULTIP <CONST: INT 9>>>", iter.next().toString());
         assertEquals("<ASSIGN: <ID: a> <BINOP: <ID: a> DIVISION <CONST: INT 9>>>", iter.next().toString());
     }
+
+    @Test
+    void testGeneral1() throws FileNotFoundException, SyntacticException {
+        var s = new Scanner(testPath + "testGenerale1.txt");
+        var p = new Parser(s);
+
+        var program = p.parse();
+        var iter = program.getdecStm().iterator();
+
+        assertEquals(11, program.getdecStm().size());
+
+        //float num;
+        //int id = 99/2;
+        //num = 5;
+        //num = id;
+        //num *= id + 5.0;
+        //id /= 5;
+        //num = id * id;
+        //id += 5 - 8 * 6.0 / 2;
+        //num = id * 5 - 8.0 * 6 + 2;
+        //print num;
+        //print id;
+        assertEquals("<DECL: FLOAT <ID: num> null>", iter.next().toString());
+        assertEquals("INT id = (99 / 2)", iter.next().toStringConcise());
+        assertEquals("<ASSIGN: <ID: num> <CONST: INT 5>>", iter.next().toString());
+        assertEquals("<ASSIGN: <ID: num> <ID: id>>", iter.next().toString());
+        assertEquals("num = (num * (id + 5.0))", iter.next().toStringConcise());
+        assertEquals("<ASSIGN: <ID: id> <BINOP: <ID: id> DIVISION <CONST: INT 5>>>", iter.next().toString());
+        assertEquals("<ASSIGN: <ID: num> <BINOP: <ID: id> MULTIP <ID: id>>>", iter.next().toString());
+        assertEquals("id = (id + (5 - (8 * (6.0 * 2))))", iter.next().toStringConcise());
+        assertEquals("num = ((id * 5) - ((8.0 * 6) + 2))", iter.next().toStringConcise());
+        assertEquals("<PRINT: <ID: num>>", iter.next().toString());
+        assertEquals("<PRINT: <ID: id>>", iter.next().toString());
+    }
 }

@@ -137,6 +137,14 @@ public class TestParser {
     }
 
     @Test
+    void testMoreOK4() throws IOException, SyntacticException {
+        Scanner s = new Scanner(testPath + "moreOK4.txt");
+        Parser p = new Parser(s);
+
+        p.parse();
+    }
+
+    @Test
     void testMoreEcc1() throws IOException {
         Scanner s = new Scanner(testPath + "moreEcc1.txt");
         Parser p = new Parser(s);

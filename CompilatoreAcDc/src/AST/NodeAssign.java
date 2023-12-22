@@ -9,7 +9,13 @@ public class NodeAssign extends NodeStm{
         this.expr = expr;
     }
 
+    @Override
     public String toString(){
         return "<ASSIGN: " + id + " " + expr +">";
+    }
+
+    @Override
+    public String toStringConcise() {
+        return id.toStringConcise() + " = " + expr.toStringConcise();
     }
 }

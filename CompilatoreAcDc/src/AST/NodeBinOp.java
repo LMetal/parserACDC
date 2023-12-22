@@ -14,4 +14,9 @@ public class NodeBinOp extends NodeExpr{
     public String toString(){
         return "<BINOP: "+ left + " " + op + " " + right + ">";
     }
+
+    @Override
+    public String toStringConcise() {
+        return "(" + left.toStringConcise() + " " + op.toStringConcise() + " " + right.toStringConcise() + ")";
+    }
 }

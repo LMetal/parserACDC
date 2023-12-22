@@ -8,7 +8,6 @@ import token.TokenType;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class Parser {
     private final Scanner scanner;
@@ -30,9 +29,9 @@ public class Parser {
 
         switch (t.getTipo()){
             case TYPE_INT, TYPE_FLOAT, ID, PRINT, EOF -> { // Prg -> DSs $
-                ArrayList<NodeDecSt> p = parseDSs();
+                ArrayList<NodeDecSt> declStmList = parseDSs();
                 match(TokenType.EOF);
-                return new NodeProgram(p);
+                return new NodeProgram(declStmList);
             }
             default -> throw new SyntacticException("TYPE_INT, TYPE_FLOAT, ID, PRINT, EOF", t.getRiga(), t.getTipo());
         }
@@ -40,21 +39,20 @@ public class Parser {
 
     private ArrayList<NodeDecSt> parseDSs() throws LexicalException, IOException, SyntacticException {
         Token t = scanner.peekToken();
-        //ArrayList<NodeDecSt> decSts = new ArrayList<>();
 
         switch (t.getTipo()){
             case TYPE_INT, TYPE_FLOAT -> {  // DSs -> DCl DSs
-                NodeDecSt stm = parseDcl();
-                ArrayList<NodeDecSt> temp = parseDSs();
-                temp.add(0, stm);
-                return temp;
+                NodeDecSt dcl = parseDcl();
+                ArrayList<NodeDecSt> declStmList = parseDSs();
+                declStmList.add(0, dcl);
+                return declStmList;
             }
 
             case ID, PRINT -> {     // DSs -> Stm DSs
                 NodeDecSt stm = parseStm();
-                ArrayList<NodeDecSt> temp = parseDSs();
-                temp.add(0, stm);
-                return temp;
+                ArrayList<NodeDecSt> declStmList = parseDSs();
+                declStmList.add(0, stm);
+                return declStmList;
             }
 
             case EOF -> {    // DSs -> ϵ
@@ -73,8 +71,9 @@ public class Parser {
         switch (t.getTipo()){
             case TYPE_INT, TYPE_FLOAT   -> {
                 LangType type = parseTy();
-                NodeId id = new NodeId(match(TokenType.ID));
-                return new NodeDecl(type, id, parseDclP());
+                NodeId id = new NodeId(match(TokenType.ID).getVal());
+                NodeExpr init = parseDclP();
+                return new NodeDecl(type, id, init);
             }
 
             default -> throw new SyntacticException("TYPE_INT, TYPE_FLOAT", t.getRiga(), t.getTipo());
@@ -91,7 +90,7 @@ public class Parser {
             }
             case OP_ASS -> {                    //DclP -> opAss Exp
                 Token op = match(TokenType.OP_ASS);
-                if(!Objects.equals(op.getVal(), "=")) throw new SyntacticException("=", t.getRiga(), op.getVal());
+                if(!op.getVal().equals("=")) throw new SyntacticException("=", t.getRiga(), op.getVal());
                 NodeExpr expr = parseExp();
                 match(TokenType.SEMI);
                 return expr;
@@ -108,7 +107,7 @@ public class Parser {
 
         switch (t.getTipo()){
             case ID -> {        // Stm -> id opAss Exp
-                id = new NodeId(match(TokenType.ID));
+                id = new NodeId(match(TokenType.ID).getVal());
                 Token op = match(TokenType.OP_ASS);
                 NodeExpr expr = parseExp();
 
@@ -127,7 +126,7 @@ public class Parser {
 
             case PRINT -> {     // Stm -> print id ;
                 match(TokenType.PRINT);
-                id = new NodeId(match(TokenType.ID));
+                id = new NodeId(match(TokenType.ID).getVal());
                 stm = new NodePrint(id);
                 match(TokenType.SEMI);
                 return stm;
@@ -240,18 +239,20 @@ public class Parser {
         switch (t.getTipo()){
             case MULTIP -> {    //TrP -> * Val Trp
                 match(TokenType.MULTIP);
-                NodeExpr val = parseVal();
-                parseTrP();
+                NodeExpr val1 = parseVal();
+                NodeExpr val2 = parseTrP();
 
-                return val;
+                if(val2 == null)return val1;
+                else return new NodeBinOp(val1, LangOper.MULTIP, val2);
             }
 
             case DIVISION -> {    //TrP -> / Val Trp
                 match(TokenType.DIVISION);
-                NodeExpr val = parseVal();
-                parseTrP();
+                NodeExpr val1 = parseVal();
+                NodeExpr val2 = parseTrP();
 
-                return val;
+                if(val2 == null)return val1;
+                else return new NodeBinOp(val1, LangOper.DIVISION, val2);
             }
 
             case MINUS, PLUS, SEMI ->{  //TrP ->
@@ -289,7 +290,7 @@ public class Parser {
                 return new NodeConst(match(TokenType.FLOAT).getVal(), LangType.FLOAT);
             }
             case ID -> {
-                return new NodeDeref(new NodeId(match(TokenType.ID)));
+                return new NodeDeref(new NodeId(match(TokenType.ID).getVal()));
             }
 
             default -> throw new SyntacticException("ID, FLOAT, INT", t.getRiga(), t.getTipo());

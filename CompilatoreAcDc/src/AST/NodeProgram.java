@@ -13,8 +13,16 @@ public class NodeProgram extends NodeAST {
         return decSts;
     }
 
+    @Override
     public String toString(){
         return "PROGRAM : " + decSts.toString();
+    }
+
+    @Override
+    public String toStringConcise() {
+        return decSts.stream()
+                .map(NodeDecSt::toStringConcise)
+                .reduce("", (partialResult, element) -> partialResult + element);
     }
 
 }

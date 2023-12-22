@@ -10,4 +10,9 @@ public class NodeDeref extends NodeExpr{
     public String toString(){
         return id.toString();
     }
+
+    @Override
+    public String toStringConcise() {
+        return id.toStringConcise();
+    }
 }

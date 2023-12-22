@@ -10,4 +10,9 @@ public class NodePrint extends NodeStm{
     public String toString() {
         return "<PRINT: " + id.toString()+">";
     }
+
+    @Override
+    public String toStringConcise() {
+        return "PRINT" + id.toStringConcise();
+    }
 }
