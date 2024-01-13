@@ -10,12 +10,12 @@ public class NodeConvert extends NodeExpr{
 
     @Override
     public String toString() {
-        return node.toString();
+        return "<CONVERT: " + node.toString() +">";
     }
 
     @Override
     public String toStringConcise() {
-        return node.toStringConcise();
+        return "(float)"+node.toStringConcise();
     }
 
     @Override

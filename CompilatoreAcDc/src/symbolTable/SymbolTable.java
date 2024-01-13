@@ -1,6 +1,5 @@
 package symbolTable;
 
-import AST.LangOper;
 import AST.LangType;
 
 import java.util.HashMap;
@@ -21,7 +20,7 @@ public class SymbolTable {
     public static boolean enter(String id, LangType entry){
         if(table.containsKey(id)) return false;
 
-        System.out.println("ADDING: " + id);
+        //System.out.println("ADDING: " + id);
         table.put(id, entry);
         return true;
     }

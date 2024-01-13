@@ -22,4 +22,8 @@ public class NodeDeref extends NodeExpr{
     public void accept(IVisitor visitor) {
         visitor.visit(this);
     }
+
+    public NodeId getId(){
+        return id;
+    }
 }

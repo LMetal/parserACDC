@@ -25,4 +25,12 @@ public class NodeAssign extends NodeStm{
     public void accept(IVisitor visitor) {
         visitor.visit(this);
     }
+
+    public NodeId getId(){
+        return id;
+    }
+
+    public NodeExpr getExpr(){
+        return expr;
+    }
 }

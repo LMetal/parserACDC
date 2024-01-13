@@ -1,6 +1,5 @@
 package AST;
 
-import org.w3c.dom.Node;
 import visitor.IVisitor;
 
 public class NodeBinOp extends NodeExpr{
@@ -33,7 +32,7 @@ public class NodeBinOp extends NodeExpr{
     }
 
     public NodeExpr getRight() {
-        return left;
+        return right;
     }
 
     public void setLeft(NodeConvert nodeConvert) {
@@ -41,6 +40,6 @@ public class NodeBinOp extends NodeExpr{
     }
 
     public void setRight(NodeConvert nodeConvert) {
-        this.left = nodeConvert;
+        this.right = nodeConvert;
     }
 }

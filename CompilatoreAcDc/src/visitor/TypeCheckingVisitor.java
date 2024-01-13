@@ -6,22 +6,20 @@ import typeDescriptor.TypeDescriptor;
 import typeDescriptor.TypeTD;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class TypeCheckingVisitor implements IVisitor{
     private TypeDescriptor resType;
-    private ArrayList<TypeDescriptor> linesRes;
+    private final ArrayList<TypeDescriptor> linesRes;
 
     public TypeCheckingVisitor(){
         SymbolTable.init();
         linesRes = new ArrayList<>();
     }
 
-    public TypeDescriptor getResType(){
-        return resType;
-    }
 
-    public ArrayList<TypeDescriptor> getLinesRes(){
-        return linesRes;
+    public Iterator<TypeDescriptor> getLinesRes(){
+        return linesRes.iterator();
     }
 
     @Override
@@ -34,19 +32,27 @@ public class TypeCheckingVisitor implements IVisitor{
 
     @Override
     public void visit(NodeId node) {
-        if(SymbolTable.lookup(node.getName()) == null) resType = new TypeDescriptor(TypeTD.ERROR);
-        else resType = new TypeDescriptor(TypeTD.OK);
+        if(SymbolTable.lookup(node.getName()) == null) resType = new TypeDescriptor(TypeTD.ERROR, node.getName() + " non dichiarato");
+        else if(SymbolTable.lookup(node.getName()) == LangType.INT)
+            resType = new TypeDescriptor(TypeTD.INT);
+        else
+            resType = new TypeDescriptor(TypeTD.FLOAT);
     }
 
     @Override
     public void visit(NodeDecl node) {
-        // TODO replace null ??? idk
-        if(SymbolTable.enter(node.getNodeId().getName(), LangType.FLOAT)){
+        if(SymbolTable.enter(node.getNodeId().getName(), node.getType())){
             resType = new TypeDescriptor(TypeTD.OK);
         }
         else{
-            resType = new TypeDescriptor(TypeTD.ERROR);
+            resType = new TypeDescriptor(TypeTD.ERROR, node.getNodeId().getName() + " gia' dichiarato");
         }
+
+        if(node.getInit() != null){
+            node.getInit().accept(this);
+            if(resType.getTypeTD() != TypeTD.ERROR) resType = new TypeDescriptor(TypeTD.OK);
+        }
+
     }
 
     @Override
@@ -56,7 +62,16 @@ public class TypeCheckingVisitor implements IVisitor{
         node.getRight().accept(this);
         TypeDescriptor rightTD = resType;
 
-        if(leftTD.getTypeTD() == TypeTD.ERROR || rightTD.getTypeTD() == TypeTD.ERROR) resType = new TypeDescriptor(TypeTD.ERROR);
+        //System.out.println("left "+node.getLeft().toString()+" "+ leftTD.getTypeTD() + " right "+node.getRight().toString()+" "+ rightTD.getTypeTD());
+
+        if(leftTD.getTypeTD() == TypeTD.ERROR) {
+            resType = leftTD;
+            return;
+        }
+        if(rightTD.getTypeTD() == TypeTD.ERROR) {
+            resType = rightTD;
+            return;
+        }
 
         if(leftTD.getTypeTD() != rightTD.getTypeTD()){
             if(leftTD.getTypeTD() == TypeTD.INT){
@@ -85,18 +100,44 @@ public class TypeCheckingVisitor implements IVisitor{
 
     @Override
     public void visit(NodeDeref nodeDeref) {
-
+        nodeDeref.getId().accept(this);
     }
 
     @Override
     public void visit(NodePrint nodePrint) {
         nodePrint.getId().accept(this);
-        if(resType.getTypeTD() == TypeTD.OK) resType = new TypeDescriptor(TypeTD.OK);
-        else resType = new TypeDescriptor(TypeTD.ERROR);
+        if(resType.getTypeTD() != TypeTD.ERROR) {
+            resType = new TypeDescriptor(TypeTD.OK);
+        }
     }
 
     @Override
     public void visit(NodeAssign nodeAssign) {
+        nodeAssign.getId().accept(this);
+        TypeDescriptor idRes = resType;
+        nodeAssign.getExpr().accept(this);
+        TypeDescriptor exprRes = resType;
+
+        //System.out.println("Assign: "+nodeAssign.getId().toString() + idRes.getTypeTD() + " "+nodeAssign.getExpr().toString()+ exprRes.getTypeTD());
+
+        if(idRes.getTypeTD() == TypeTD.ERROR){
+            resType = idRes;
+            return;
+        }
+
+        if(exprRes.getTypeTD() == TypeTD.ERROR){
+            resType = exprRes;
+            return;
+        }
+
+        //se sto assegnando un float a un id INT ERRORE
+        if(idRes.getTypeTD() == TypeTD.INT && exprRes.getTypeTD() == TypeTD.FLOAT){
+            resType = new TypeDescriptor(TypeTD.ERROR, "Impossibile assegnare FLOAT a id INT");
+
+            return;
+        }
+
+        resType = new TypeDescriptor(TypeTD.OK);
 
     }
 }

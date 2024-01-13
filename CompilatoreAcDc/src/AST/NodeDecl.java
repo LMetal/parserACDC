@@ -30,4 +30,11 @@ public class NodeDecl extends NodeDecSt{
     public NodeId getNodeId(){
         return id;
     }
+    public NodeExpr getInit(){
+        return init;
+    }
+
+    public LangType getType(){
+        return type;
+    }
 }
