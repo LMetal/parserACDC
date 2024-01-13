@@ -1,5 +1,7 @@
 package AST;
 
+import visitor.IVisitor;
+
 public class NodeConst extends NodeExpr{
     private final String value;
     private final LangType type;
@@ -16,5 +18,14 @@ public class NodeConst extends NodeExpr{
     @Override
     public String toStringConcise() {
         return value;
+    }
+
+    @Override
+    public void accept(IVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    public LangType getType() {
+        return type;
     }
 }

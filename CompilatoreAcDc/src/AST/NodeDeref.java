@@ -1,5 +1,7 @@
 package AST;
 
+import visitor.IVisitor;
+
 public class NodeDeref extends NodeExpr{
     private final NodeId id;
 
@@ -14,5 +16,10 @@ public class NodeDeref extends NodeExpr{
     @Override
     public String toStringConcise() {
         return id.toStringConcise();
+    }
+
+    @Override
+    public void accept(IVisitor visitor) {
+        visitor.visit(this);
     }
 }

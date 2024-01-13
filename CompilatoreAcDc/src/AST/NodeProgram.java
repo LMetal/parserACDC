@@ -1,5 +1,7 @@
 package AST;
 
+import visitor.IVisitor;
+
 import java.util.ArrayList;
 
 public class NodeProgram extends NodeAST {
@@ -23,6 +25,11 @@ public class NodeProgram extends NodeAST {
         return decSts.stream()
                 .map(NodeDecSt::toStringConcise)
                 .reduce("", (partialResult, element) -> partialResult + element);
+    }
+
+    @Override
+    public void accept(IVisitor visitor) {
+        visitor.visit(this);
     }
 
 }

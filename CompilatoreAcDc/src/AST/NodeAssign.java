@@ -1,5 +1,7 @@
 package AST;
 
+import visitor.IVisitor;
+
 public class NodeAssign extends NodeStm{
     private final NodeId id;
     private final NodeExpr expr;
@@ -17,5 +19,10 @@ public class NodeAssign extends NodeStm{
     @Override
     public String toStringConcise() {
         return id.toStringConcise() + " = " + expr.toStringConcise();
+    }
+
+    @Override
+    public void accept(IVisitor visitor) {
+        visitor.visit(this);
     }
 }

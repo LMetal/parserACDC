@@ -1,5 +1,7 @@
 package AST;
 
+import visitor.IVisitor;
+
 public class NodeDecl extends NodeDecSt{
     private final NodeId id;
     private final LangType type;
@@ -18,5 +20,14 @@ public class NodeDecl extends NodeDecSt{
     @Override
     public String toStringConcise() {
         return type + " " + id.toStringConcise() + " = " + init.toStringConcise();
+    }
+
+    @Override
+    public void accept(IVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    public NodeId getNodeId(){
+        return id;
     }
 }

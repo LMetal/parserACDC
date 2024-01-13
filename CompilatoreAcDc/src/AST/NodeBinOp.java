@@ -1,8 +1,11 @@
 package AST;
 
+import org.w3c.dom.Node;
+import visitor.IVisitor;
+
 public class NodeBinOp extends NodeExpr{
-    private final NodeExpr left;
-    private final NodeExpr right;
+    private NodeExpr left;
+    private NodeExpr right;
     private final LangOper op;
 
     public NodeBinOp(NodeExpr l, LangOper op, NodeExpr r){
@@ -18,5 +21,26 @@ public class NodeBinOp extends NodeExpr{
     @Override
     public String toStringConcise() {
         return "(" + left.toStringConcise() + " " + op.toStringConcise() + " " + right.toStringConcise() + ")";
+    }
+
+    @Override
+    public void accept(IVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    public NodeExpr getLeft() {
+        return left;
+    }
+
+    public NodeExpr getRight() {
+        return left;
+    }
+
+    public void setLeft(NodeConvert nodeConvert) {
+        this.left = nodeConvert;
+    }
+
+    public void setRight(NodeConvert nodeConvert) {
+        this.left = nodeConvert;
     }
 }
