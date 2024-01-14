@@ -15,7 +15,7 @@ public class NodeConvert extends NodeExpr{
 
     @Override
     public String toStringConcise() {
-        return "(float)"+node.toStringConcise();
+        return "(float)("+node.toStringConcise()+")";
     }
 
     @Override

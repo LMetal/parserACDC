@@ -24,7 +24,7 @@ public class TypeCheckingVisitor implements IVisitor{
 
     @Override
     public void visit(NodeProgram node) {
-        for(NodeDecSt line: node.getdecStm()){
+        for(NodeDecSt line: node.getDecStm()){
             line.accept(this);
             linesRes.add(resType);
         }
@@ -41,16 +41,30 @@ public class TypeCheckingVisitor implements IVisitor{
 
     @Override
     public void visit(NodeDecl node) {
+        TypeDescriptor idRes, initRes;
+
+        // se id gia' dichiarato, errore e return
         if(SymbolTable.enter(node.getNodeId().getName(), node.getType())){
-            resType = new TypeDescriptor(TypeTD.OK);
+            if(node.getType() == LangType.INT) idRes = new TypeDescriptor(TypeTD.INT);
+            else idRes = new TypeDescriptor(TypeTD.FLOAT);
         }
         else{
             resType = new TypeDescriptor(TypeTD.ERROR, node.getNodeId().getName() + " gia' dichiarato");
+            return;
         }
 
-        if(node.getInit() != null){
-            node.getInit().accept(this);
-            if(resType.getTypeTD() != TypeTD.ERROR) resType = new TypeDescriptor(TypeTD.OK);
+        if(node.getInit() == null){
+            resType = new TypeDescriptor(TypeTD.OK);
+            return;
+        }
+
+        node.getInit().accept(this);
+        initRes = resType;
+        if(idRes.getTypeTD() == TypeTD.INT) {
+            if (initRes.getTypeTD() == TypeTD.INT) resType = new TypeDescriptor(TypeTD.OK);
+            else resType = new TypeDescriptor(TypeTD.ERROR, "impossibile inizializzare INT a FLOAT");
+        } else {
+            resType = new TypeDescriptor(TypeTD.OK);
         }
 
     }

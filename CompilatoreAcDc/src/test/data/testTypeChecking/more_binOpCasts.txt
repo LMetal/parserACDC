@@ -1,0 +1,4 @@
+int a = 0;
+float b = a + 1.;
+b = a + 0.;
+b = a * a / 1.;

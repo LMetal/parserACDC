@@ -18,7 +18,7 @@ public class TestAST {
         var p = new Parser(s);
 
         var program = p.parse();
-        var iter = program.getdecStm().iterator();
+        var iter = program.getDecStm().iterator();
 
         /*
         print a;
@@ -34,13 +34,13 @@ public class TestAST {
         var p = new Parser(s);
 
         var program = p.parse();
-        var iter = program.getdecStm().iterator();
+        var iter = program.getDecStm().iterator();
 
 
         // int a;
         // float b;
 
-        assertEquals(2, program.getdecStm().size());
+        assertEquals(2, program.getDecStm().size());
         assertEquals("<DECL: INT <ID: a> null>", iter.next().toString());
         assertEquals("<DECL: FLOAT <ID: b> null>", iter.next().toString());
 
@@ -52,9 +52,9 @@ public class TestAST {
         var p = new Parser(s);
 
         var program = p.parse();
-        var iter = program.getdecStm().iterator();
+        var iter = program.getDecStm().iterator();
 
-        assertEquals(4, program.getdecStm().size());
+        assertEquals(4, program.getDecStm().size());
 
         //System.out.println(program);
 
@@ -76,9 +76,9 @@ public class TestAST {
         var p = new Parser(s);
 
         var program = p.parse();
-        var iter = program.getdecStm().iterator();
+        var iter = program.getDecStm().iterator();
 
-        assertEquals(5, program.getdecStm().size());
+        assertEquals(5, program.getDecStm().size());
 
         //int a = 1 + 2;
         //float x = a + 7.25;
@@ -100,9 +100,9 @@ public class TestAST {
         var p = new Parser(s);
 
         var program = p.parse();
-        var iter = program.getdecStm().iterator();
+        var iter = program.getDecStm().iterator();
 
-        assertEquals(4, program.getdecStm().size());
+        assertEquals(4, program.getDecStm().size());
 
         //System.out.println(program);
 
@@ -116,15 +116,36 @@ public class TestAST {
         assertEquals("<ASSIGN: <ID: c> <BINOP: <BINOP: <CONST: INT 2> DIVISION <CONST: INT 3>> PLUS <BINOP: <CONST: INT 7> MULTIP <CONST: FLOAT 0.>>>>", iter.next().toString());
     }
 
+
+    @Test
+    void testMultipDivis() throws SyntacticException, FileNotFoundException {
+        var s = new Scanner( testPath + "testMultDivis.txt");
+        var p = new Parser(s);
+
+        var program = p.parse();
+        var iter = program.getDecStm().iterator();
+
+        assertEquals(3, program.getDecStm().size());
+
+        //System.out.println(program);
+
+        //a = a / 5;
+        //b = 8 * a;
+        assertEquals("<ASSIGN: <ID: a> <BINOP: <ID: a> DIVISION <CONST: INT 5>>>", iter.next().toString());
+        assertEquals("<ASSIGN: <ID: b> <BINOP: <CONST: INT 8> MULTIP <ID: a>>>", iter.next().toString());
+        assertEquals("<ASSIGN: <ID: c> <BINOP: <CONST: INT 8> MULTIP <BINOP: <CONST: INT 7> DIVISION <CONST: INT 6>>>>", iter.next().toString());
+    }
+
+
     @Test
     void testDeclExpr() throws FileNotFoundException, SyntacticException {
         var s = new Scanner( testPath + "testDecl2.txt");
         var p = new Parser(s);
 
         var program = p.parse();
-        var iter = program.getdecStm().iterator();
+        var iter = program.getDecStm().iterator();
 
-        assertEquals(2, program.getdecStm().size());
+        assertEquals(2, program.getDecStm().size());
 
         assertEquals("<DECL: FLOAT <ID: k> <BINOP: <BINOP: <CONST: INT 7> DIVISION <ID: a>> PLUS <ID: b>>>", iter.next().toString());
         assertEquals("<DECL: FLOAT <ID: k> <BINOP: <BINOP: <CONST: FLOAT 7.25> DIVISION <ID: a>> PLUS <BINOP: <ID: b> PLUS <BINOP: <ID: c> MULTIP <CONST: INT 9>>>>>", iter.next().toString());
@@ -137,9 +158,9 @@ public class TestAST {
         var p = new Parser(s);
 
         var program = p.parse();
-        var iter = program.getdecStm().iterator();
+        var iter = program.getDecStm().iterator();
 
-        assertEquals(5, program.getdecStm().size());
+        assertEquals(5, program.getDecStm().size());
 
 
         // a = a + 9;
@@ -160,9 +181,9 @@ public class TestAST {
         var p = new Parser(s);
 
         var program = p.parse();
-        var iter = program.getdecStm().iterator();
+        var iter = program.getDecStm().iterator();
 
-        assertEquals(11, program.getdecStm().size());
+        assertEquals(11, program.getDecStm().size());
 
         //float num;
         //int id = 99/2;
@@ -182,7 +203,7 @@ public class TestAST {
         assertEquals("num = (num * (id + 5.0))", iter.next().toStringConcise());
         assertEquals("<ASSIGN: <ID: id> <BINOP: <ID: id> DIVISION <CONST: INT 5>>>", iter.next().toString());
         assertEquals("<ASSIGN: <ID: num> <BINOP: <ID: id> MULTIP <ID: id>>>", iter.next().toString());
-        assertEquals("id = (id + (5 - (8 * (6.0 * 2))))", iter.next().toStringConcise());
+        assertEquals("id = (id + (5 - (8 * (6.0 / 2))))", iter.next().toStringConcise());
         assertEquals("num = ((id * 5) - ((8.0 * 6) + 2))", iter.next().toStringConcise());
         assertEquals("<PRINT: <ID: num>>", iter.next().toString());
         assertEquals("<PRINT: <ID: id>>", iter.next().toString());

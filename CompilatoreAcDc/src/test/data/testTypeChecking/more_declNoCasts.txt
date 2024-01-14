@@ -1,0 +1,4 @@
+float a = 9;
+int b = 0;
+float c = b;
+float d = b+7;

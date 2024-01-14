@@ -118,4 +118,60 @@ public class TestTypeCheck {
         assertEquals(TypeTD.OK, resIter.next().getTypeTD());
         assertEquals(TypeTD.OK, resIter.next().getTypeTD());
     }
+
+    @Test
+    void testDeclNoCast() throws FileNotFoundException, SyntacticException {
+        NodeProgram nP = new Parser(new Scanner(testPath + "more_declNoCasts.txt")).parse();
+        var tcVisit = new TypeCheckingVisitor();
+        nP.accept(tcVisit);
+
+        var resIter = tcVisit.getLinesRes();
+        assertEquals(TypeTD.OK, resIter.next().getTypeTD());
+        assertEquals(TypeTD.OK, resIter.next().getTypeTD());
+        assertEquals(TypeTD.OK, resIter.next().getTypeTD());
+        assertEquals(TypeTD.OK, resIter.next().getTypeTD());
+        assertEquals("FLOAT a = 9; INT b = 0; FLOAT c = b; FLOAT d = (b + 7)", nP.toStringConcise());
+    }
+
+
+    @Test
+    void testAssignNoCasts() throws FileNotFoundException, SyntacticException {
+        NodeProgram nP = new Parser(new Scanner(testPath + "more_assignNoCasts.txt")).parse();
+        var tcVisit = new TypeCheckingVisitor();
+        nP.accept(tcVisit);
+
+        var resIter = tcVisit.getLinesRes();
+        assertEquals(TypeTD.OK, resIter.next().getTypeTD());
+        assertEquals(TypeTD.OK, resIter.next().getTypeTD());
+        assertEquals(TypeTD.OK, resIter.next().getTypeTD());
+        assertEquals(TypeTD.OK, resIter.next().getTypeTD());
+        assertEquals(TypeTD.OK, resIter.next().getTypeTD());
+
+        assertEquals("INT b = 0; FLOAT a = null; a = 9; a = b; a = (1 + 1)", nP.toStringConcise());
+    }
+
+    @Test
+    void testBinOpCasts() throws FileNotFoundException, SyntacticException {
+        NodeProgram nP = new Parser(new Scanner(testPath + "more_binOpCasts.txt")).parse();
+        var tcVisit = new TypeCheckingVisitor();
+        nP.accept(tcVisit);
+
+        var resIter = tcVisit.getLinesRes();
+        assertEquals(TypeTD.OK, resIter.next().getTypeTD());
+        assertEquals(TypeTD.OK, resIter.next().getTypeTD());
+        assertEquals(TypeTD.OK, resIter.next().getTypeTD());
+        assertEquals(TypeTD.OK, resIter.next().getTypeTD());
+
+        assertEquals("INT a = 0; FLOAT b = ((float)(a) + 1.); b = ((float)(a) + 0.); b = ((float)(a) * ((float)(a) / 1.))", nP.toStringConcise());
+    }
+
+    @Test
+    void testMoreErr1() throws FileNotFoundException, SyntacticException {
+        NodeProgram nP = new Parser(new Scanner(testPath + "moreErr1.txt")).parse();
+        var tcVisit = new TypeCheckingVisitor();
+        nP.accept(tcVisit);
+
+        var resIter = tcVisit.getLinesRes();
+        assertEquals(TypeTD.ERROR, resIter.next().getTypeTD());
+    }
 }

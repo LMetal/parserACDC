@@ -19,7 +19,8 @@ public class NodeDecl extends NodeDecSt{
 
     @Override
     public String toStringConcise() {
-        return type + " " + id.toStringConcise() + " = " + init.toStringConcise();
+        if(init != null) return type + " " + id.toStringConcise() + " = " + init.toStringConcise();
+        else return type + " " + id.toStringConcise() + " = null";
     }
 
     @Override

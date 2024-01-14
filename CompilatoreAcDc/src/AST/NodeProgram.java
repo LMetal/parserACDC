@@ -3,6 +3,7 @@ package AST;
 import visitor.IVisitor;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class NodeProgram extends NodeAST {
     private final ArrayList<NodeDecSt> decSts;
@@ -11,7 +12,7 @@ public class NodeProgram extends NodeAST {
         this.decSts = nodes;
     }
 
-    public ArrayList<NodeDecSt> getdecStm(){
+    public ArrayList<NodeDecSt> getDecStm(){
         return decSts;
     }
 
@@ -24,7 +25,7 @@ public class NodeProgram extends NodeAST {
     public String toStringConcise() {
         return decSts.stream()
                 .map(NodeDecSt::toStringConcise)
-                .reduce("", (partialResult, element) -> partialResult + element);
+                .collect(Collectors.joining("; "));
     }
 
     @Override

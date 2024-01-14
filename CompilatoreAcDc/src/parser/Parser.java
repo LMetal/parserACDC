@@ -240,19 +240,36 @@ public class Parser {
             case MULTIP -> {    //TrP -> * Val Trp
                 match(TokenType.MULTIP);
                 NodeExpr val1 = parseVal();
+
+                // salvo eventuale op prima della chiamata
+                LangOper op = null;
+                if(scanner.peekToken() != null){
+                    if(scanner.peekToken().getTipo() == TokenType.MULTIP) op = LangOper.MULTIP;
+                    if(scanner.peekToken().getTipo() == TokenType.DIVISION) op = LangOper.DIVISION;
+                }
                 NodeExpr val2 = parseTrP();
 
                 if(val2 == null)return val1;
-                else return new NodeBinOp(val1, LangOper.MULTIP, val2);
+                else return new NodeBinOp(val1, op, val2);
             }
 
             case DIVISION -> {    //TrP -> / Val Trp
                 match(TokenType.DIVISION);
                 NodeExpr val1 = parseVal();
-                NodeExpr val2 = parseTrP();
 
+                // salvo eventuale op prima della chiamata
+                LangOper op = null;
+                if(scanner.peekToken() != null){
+                    if(scanner.peekToken().getTipo() == TokenType.MULTIP) op = LangOper.MULTIP;
+                    if(scanner.peekToken().getTipo() == TokenType.DIVISION) op = LangOper.DIVISION;
+                }
+
+                NodeExpr val2 = parseTrP();
                 if(val2 == null)return val1;
-                else return new NodeBinOp(val1, LangOper.DIVISION, val2);
+                else{
+                    System.out.println("HEEH");
+                    return new NodeBinOp(val1, op, val2);
+                }
             }
 
             case MINUS, PLUS, SEMI ->{  //TrP ->
