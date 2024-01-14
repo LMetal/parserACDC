@@ -5,7 +5,35 @@ import AST.LangType;
 import java.util.HashMap;
 
 public class SymbolTable {
-    static HashMap<String, LangType> table;
+    public static class Attributes{
+        private final LangType tipo;
+        private final String nome;
+        private boolean isInit;
+
+        public Attributes(LangType type, String name, boolean init) {
+            this.tipo = type;
+            this.nome = name;
+            this.isInit = init;
+        }
+
+        public LangType getTipo(){
+            return tipo;
+        }
+
+        public boolean isInit(){
+            return isInit;
+        }
+
+        public void initVar() {
+            this.isInit = true;
+        }
+
+        public String getNome() {
+            return nome;
+        }
+        //TODO ??
+    }
+    static HashMap<String, Attributes> table;
 
     public static void init(){
         table = new HashMap<>();
@@ -17,15 +45,16 @@ public class SymbolTable {
      * @param entry Attributes of id
      * @return true if new, false if already in use
      */
-    public static boolean enter(String id, LangType entry){
+    public static boolean enter(String id, Attributes entry){
         if(table.containsKey(id)) return false;
 
-        //System.out.println("ADDING: " + id);
         table.put(id, entry);
+        //System.out.println("ADDING: " + id);
+        //System.out.println(table);
         return true;
     }
 
-    public static LangType lookup(String id){
+    public static Attributes lookup(String id){
         return table.get(id);
     }
 

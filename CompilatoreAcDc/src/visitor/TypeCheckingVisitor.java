@@ -33,7 +33,7 @@ public class TypeCheckingVisitor implements IVisitor{
     @Override
     public void visit(NodeId node) {
         if(SymbolTable.lookup(node.getName()) == null) resType = new TypeDescriptor(TypeTD.ERROR, node.getName() + " non dichiarato");
-        else if(SymbolTable.lookup(node.getName()) == LangType.INT)
+        else if(SymbolTable.lookup(node.getName()).getTipo() == LangType.INT)
             resType = new TypeDescriptor(TypeTD.INT);
         else
             resType = new TypeDescriptor(TypeTD.FLOAT);
@@ -44,7 +44,7 @@ public class TypeCheckingVisitor implements IVisitor{
         TypeDescriptor idRes, initRes;
 
         // se id gia' dichiarato, errore e return
-        if(SymbolTable.enter(node.getNodeId().getName(), node.getType())){
+        if(SymbolTable.enter(node.getNodeId().getName(), new SymbolTable.Attributes(node.getType(), node.getNodeId().getName(), false))){
             if(node.getType() == LangType.INT) idRes = new TypeDescriptor(TypeTD.INT);
             else idRes = new TypeDescriptor(TypeTD.FLOAT);
         }
@@ -59,6 +59,7 @@ public class TypeCheckingVisitor implements IVisitor{
         }
 
         node.getInit().accept(this);
+        SymbolTable.lookup(node.getNodeId().getName()).initVar();
         initRes = resType;
         if(idRes.getTypeTD() == TypeTD.INT) {
             if (initRes.getTypeTD() == TypeTD.INT) resType = new TypeDescriptor(TypeTD.OK);
