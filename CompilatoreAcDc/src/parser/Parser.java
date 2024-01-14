@@ -266,10 +266,7 @@ public class Parser {
 
                 NodeExpr val2 = parseTrP();
                 if(val2 == null)return val1;
-                else{
-                    System.out.println("HEEH");
-                    return new NodeBinOp(val1, op, val2);
-                }
+                else return new NodeBinOp(val1, op, val2);
             }
 
             case MINUS, PLUS, SEMI ->{  //TrP ->
