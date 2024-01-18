@@ -22,4 +22,8 @@ public class NodeConvert extends NodeExpr{
     public void accept(IVisitor visitor) {
         visitor.visit(this);
     }
+
+    public NodeExpr getExpr(){
+        return node;
+    }
 }

@@ -28,4 +28,8 @@ public class NodeConst extends NodeExpr{
     public LangType getType() {
         return type;
     }
+
+    public String getValue(){
+        return value;
+    }
 }

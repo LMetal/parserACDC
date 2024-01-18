@@ -2,21 +2,26 @@ package typeDescriptor;
 
 public class TypeDescriptor {
     private final TypeTD type;
-    private String messaggio = null;
+    private String errore = null;
+    private int row;
 
     public TypeDescriptor(TypeTD t){
         this.type = t;
     }
 
-    public TypeDescriptor(TypeTD t, String messaggio){
+    public TypeDescriptor(TypeTD t, String errore){
         this.type = t;
-        this.messaggio = messaggio;
+        this.errore = errore;
+    }
+
+    public void setRow(int row){
+        this.row = row;
     }
 
     public TypeTD getTypeTD(){
         return type;
     }
-    public String getMessaggio(){
-        return messaggio;
+    public String getMessaggioErrore(){
+        return "r:"+ row +" "+ errore;
     }
 }

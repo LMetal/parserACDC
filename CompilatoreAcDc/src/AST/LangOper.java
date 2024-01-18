@@ -6,7 +6,7 @@ public enum LangOper {
     MULTIP,
     DIVISION;
 
-    public String toStringConcise(){
+    public String toString(){
         return switch (this) {
             case PLUS -> "+";
             case MINUS -> "-";

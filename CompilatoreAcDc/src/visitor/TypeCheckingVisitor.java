@@ -22,11 +22,15 @@ public class TypeCheckingVisitor implements IVisitor{
         return linesRes.iterator();
     }
 
+
     @Override
     public void visit(NodeProgram node) {
+        int row = 0;
         for(NodeDecSt line: node.getDecStm()){
             line.accept(this);
             linesRes.add(resType);
+            if(resType.getTypeTD() == TypeTD.ERROR) resType.setRow(row);
+            row++;
         }
     }
 
@@ -44,7 +48,7 @@ public class TypeCheckingVisitor implements IVisitor{
         TypeDescriptor idRes, initRes;
 
         // se id gia' dichiarato, errore e return
-        if(SymbolTable.enter(node.getNodeId().getName(), new SymbolTable.Attributes(node.getType(), node.getNodeId().getName(), false))){
+        if(SymbolTable.enter(node.getNodeId().getName(), new SymbolTable.Attributes(node.getType(), node.getNodeId().getName()))){
             if(node.getType() == LangType.INT) idRes = new TypeDescriptor(TypeTD.INT);
             else idRes = new TypeDescriptor(TypeTD.FLOAT);
         }
@@ -59,7 +63,7 @@ public class TypeCheckingVisitor implements IVisitor{
         }
 
         node.getInit().accept(this);
-        SymbolTable.lookup(node.getNodeId().getName()).initVar();
+        SymbolTable.lookup(node.getNodeId().getName());
         initRes = resType;
         if(idRes.getTypeTD() == TypeTD.INT) {
             if (initRes.getTypeTD() == TypeTD.INT) resType = new TypeDescriptor(TypeTD.OK);
@@ -76,8 +80,6 @@ public class TypeCheckingVisitor implements IVisitor{
         TypeDescriptor leftTD = resType;
         node.getRight().accept(this);
         TypeDescriptor rightTD = resType;
-
-        //System.out.println("left "+node.getLeft().toString()+" "+ leftTD.getTypeTD() + " right "+node.getRight().toString()+" "+ rightTD.getTypeTD());
 
         if(leftTD.getTypeTD() == TypeTD.ERROR) {
             resType = leftTD;
@@ -132,8 +134,6 @@ public class TypeCheckingVisitor implements IVisitor{
         TypeDescriptor idRes = resType;
         nodeAssign.getExpr().accept(this);
         TypeDescriptor exprRes = resType;
-
-        //System.out.println("Assign: "+nodeAssign.getId().toString() + idRes.getTypeTD() + " "+nodeAssign.getExpr().toString()+ exprRes.getTypeTD());
 
         if(idRes.getTypeTD() == TypeTD.ERROR){
             resType = idRes;

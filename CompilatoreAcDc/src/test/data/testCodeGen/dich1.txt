@@ -1,0 +1,3 @@
+int a = 9;
+int b;
+int var = 1;

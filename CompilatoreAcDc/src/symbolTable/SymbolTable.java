@@ -8,30 +8,29 @@ public class SymbolTable {
     public static class Attributes{
         private final LangType tipo;
         private final String nome;
-        private boolean isInit;
+        char registro;
 
-        public Attributes(LangType type, String name, boolean init) {
+        public Attributes(LangType type, String name) {
             this.tipo = type;
             this.nome = name;
-            this.isInit = init;
+
         }
 
         public LangType getTipo(){
             return tipo;
         }
 
-        public boolean isInit(){
-            return isInit;
-        }
-
-        public void initVar() {
-            this.isInit = true;
-        }
-
         public String getNome() {
             return nome;
         }
         //TODO ??
+        public void setRegister(char registro){
+            this.registro = registro;
+        }
+
+        public char getRegister() {
+            return registro;
+        }
     }
     static HashMap<String, Attributes> table;
 
@@ -49,8 +48,6 @@ public class SymbolTable {
         if(table.containsKey(id)) return false;
 
         table.put(id, entry);
-        //System.out.println("ADDING: " + id);
-        //System.out.println(table);
         return true;
     }
 

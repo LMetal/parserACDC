@@ -19,7 +19,7 @@ public class NodeBinOp extends NodeExpr{
 
     @Override
     public String toStringConcise() {
-        return "(" + left.toStringConcise() + " " + op.toStringConcise() + " " + right.toStringConcise() + ")";
+        return "(" + left.toStringConcise() + " " + op.toString() + " " + right.toStringConcise() + ")";
     }
 
     @Override
@@ -33,6 +33,10 @@ public class NodeBinOp extends NodeExpr{
 
     public NodeExpr getRight() {
         return right;
+    }
+
+    public LangOper getOp(){
+        return op;
     }
 
     public void setLeft(NodeConvert nodeConvert) {

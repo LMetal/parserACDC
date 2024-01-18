@@ -27,7 +27,7 @@ public class TestTypeCheck {
         assertEquals(TypeTD.OK, resIter.next().getTypeTD());
         var error = resIter.next();
         assertEquals(TypeTD.ERROR, error.getTypeTD());
-        assertEquals("a gia' dichiarato", error.getMessaggio());
+        assertEquals("r:1 a gia' dichiarato", error.getMessaggioErrore());
     }
 
     @Test
@@ -42,7 +42,7 @@ public class TestTypeCheck {
 
         var error = resIter.next();
         assertEquals(TypeTD.ERROR, error.getTypeTD());
-        assertEquals("b non dichiarato", error.getMessaggio());
+        assertEquals("r:2 b non dichiarato", error.getMessaggioErrore());
     }
 
     @Test
@@ -57,7 +57,7 @@ public class TestTypeCheck {
 
         var error = resIter.next();
         assertEquals(TypeTD.ERROR, error.getTypeTD());
-        assertEquals("c non dichiarato", error.getMessaggio());
+        assertEquals("r:2 c non dichiarato", error.getMessaggioErrore());
 
     }
 
@@ -72,7 +72,7 @@ public class TestTypeCheck {
 
         var error = resIter.next();
         assertEquals(TypeTD.ERROR, error.getTypeTD());
-        assertEquals("Impossibile assegnare FLOAT a id INT", error.getMessaggio());
+        assertEquals("r:1 Impossibile assegnare FLOAT a id INT", error.getMessaggioErrore());
     }
 
     @Test
@@ -172,6 +172,21 @@ public class TestTypeCheck {
         nP.accept(tcVisit);
 
         var resIter = tcVisit.getLinesRes();
-        assertEquals(TypeTD.ERROR, resIter.next().getTypeTD());
+        var res = resIter.next();
+        assertEquals(TypeTD.ERROR, res.getTypeTD());
+        assertEquals("r:0 impossibile inizializzare INT a FLOAT", res.getMessaggioErrore());
+    }
+
+    @Test
+    void testMoreNotLatRowError() throws FileNotFoundException, SyntacticException {
+        NodeProgram nP = new Parser(new Scanner(testPath + "more_errorNotLastRow.txt")).parse();
+        var tcVisit = new TypeCheckingVisitor();
+        nP.accept(tcVisit);
+
+        var resIter = tcVisit.getLinesRes();
+        //assertEquals(TypeTD.ERROR, resIter.next().getTypeTD());
+        assertEquals("r:0 impossibile inizializzare INT a FLOAT", resIter.next().getMessaggioErrore());
+        assertEquals(TypeTD.OK, resIter.next().getTypeTD());
+        assertEquals("r:2 b non dichiarato", resIter.next().getMessaggioErrore());
     }
 }

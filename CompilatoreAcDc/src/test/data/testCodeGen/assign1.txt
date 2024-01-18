@@ -1,0 +1,4 @@
+int var;
+int vardue;
+var = 6 + 7;
+vardue = var * 9;

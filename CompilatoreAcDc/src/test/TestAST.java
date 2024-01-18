@@ -83,14 +83,14 @@ public class TestAST {
         //int a = 1 + 2;
         //float x = a + 7.25;
         //float y = 5.0 + k;
-        assertEquals("<DECL: INT <ID: a> <BINOP: <CONST: INT 1> PLUS <CONST: INT 2>>>", iter.next().toString());
-        assertEquals("<DECL: FLOAT <ID: x> <BINOP: <ID: a> PLUS <CONST: FLOAT 7.25>>>", iter.next().toString());
-        assertEquals("<DECL: FLOAT <ID: y> <BINOP: <CONST: FLOAT 5.0> PLUS <ID: k>>>", iter.next().toString());
+        assertEquals("<DECL: INT <ID: a> <BINOP: <CONST: INT 1> + <CONST: INT 2>>>", iter.next().toString());
+        assertEquals("<DECL: FLOAT <ID: x> <BINOP: <ID: a> + <CONST: FLOAT 7.25>>>", iter.next().toString());
+        assertEquals("<DECL: FLOAT <ID: y> <BINOP: <CONST: FLOAT 5.0> + <ID: k>>>", iter.next().toString());
 
         //int v = 1 - 2
         //int v = 1 - k
-        assertEquals("<DECL: INT <ID: v> <BINOP: <CONST: INT 1> MINUS <CONST: INT 2>>>", iter.next().toString());
-        assertEquals("<DECL: INT <ID: v> <BINOP: <CONST: INT 1> MINUS <ID: k>>>", iter.next().toString());
+        assertEquals("<DECL: INT <ID: v> <BINOP: <CONST: INT 1> - <CONST: INT 2>>>", iter.next().toString());
+        assertEquals("<DECL: INT <ID: v> <BINOP: <CONST: INT 1> - <ID: k>>>", iter.next().toString());
 
     }
 
@@ -110,10 +110,10 @@ public class TestAST {
         //var = 6 / 8.2;
         //x = a / b + 7;
         //c = 2 / 3 + 7 * 0.
-        assertEquals("<ASSIGN: <ID: a> <BINOP: <ID: b> PLUS <BINOP: <CONST: INT 6> MINUS <ID: c>>>>", iter.next().toString());
-        assertEquals("<ASSIGN: <ID: var> <BINOP: <CONST: INT 6> DIVISION <CONST: FLOAT 8.2>>>", iter.next().toString());
-        assertEquals("<ASSIGN: <ID: x> <BINOP: <BINOP: <ID: a> DIVISION <ID: b>> PLUS <CONST: INT 7>>>", iter.next().toString());
-        assertEquals("<ASSIGN: <ID: c> <BINOP: <BINOP: <CONST: INT 2> DIVISION <CONST: INT 3>> PLUS <BINOP: <CONST: INT 7> MULTIP <CONST: FLOAT 0.>>>>", iter.next().toString());
+        assertEquals("<ASSIGN: <ID: a> <BINOP: <ID: b> + <BINOP: <CONST: INT 6> - <ID: c>>>>", iter.next().toString());
+        assertEquals("<ASSIGN: <ID: var> <BINOP: <CONST: INT 6> / <CONST: FLOAT 8.2>>>", iter.next().toString());
+        assertEquals("<ASSIGN: <ID: x> <BINOP: <BINOP: <ID: a> / <ID: b>> + <CONST: INT 7>>>", iter.next().toString());
+        assertEquals("<ASSIGN: <ID: c> <BINOP: <BINOP: <CONST: INT 2> / <CONST: INT 3>> + <BINOP: <CONST: INT 7> * <CONST: FLOAT 0.>>>>", iter.next().toString());
     }
 
 
@@ -131,9 +131,9 @@ public class TestAST {
 
         //a = a / 5;
         //b = 8 * a;
-        assertEquals("<ASSIGN: <ID: a> <BINOP: <ID: a> DIVISION <CONST: INT 5>>>", iter.next().toString());
-        assertEquals("<ASSIGN: <ID: b> <BINOP: <CONST: INT 8> MULTIP <ID: a>>>", iter.next().toString());
-        assertEquals("<ASSIGN: <ID: c> <BINOP: <CONST: INT 8> MULTIP <BINOP: <CONST: INT 7> DIVISION <CONST: INT 6>>>>", iter.next().toString());
+        assertEquals("<ASSIGN: <ID: a> <BINOP: <ID: a> / <CONST: INT 5>>>", iter.next().toString());
+        assertEquals("<ASSIGN: <ID: b> <BINOP: <CONST: INT 8> * <ID: a>>>", iter.next().toString());
+        assertEquals("<ASSIGN: <ID: c> <BINOP: <CONST: INT 8> * <BINOP: <CONST: INT 7> / <CONST: INT 6>>>>", iter.next().toString());
     }
 
 
@@ -147,8 +147,8 @@ public class TestAST {
 
         assertEquals(2, program.getDecStm().size());
 
-        assertEquals("<DECL: FLOAT <ID: k> <BINOP: <BINOP: <CONST: INT 7> DIVISION <ID: a>> PLUS <ID: b>>>", iter.next().toString());
-        assertEquals("<DECL: FLOAT <ID: k> <BINOP: <BINOP: <CONST: FLOAT 7.25> DIVISION <ID: a>> PLUS <BINOP: <ID: b> PLUS <BINOP: <ID: c> MULTIP <CONST: INT 9>>>>>", iter.next().toString());
+        assertEquals("<DECL: FLOAT <ID: k> <BINOP: <BINOP: <CONST: INT 7> / <ID: a>> + <ID: b>>>", iter.next().toString());
+        assertEquals("<DECL: FLOAT <ID: k> <BINOP: <BINOP: <CONST: FLOAT 7.25> / <ID: a>> + <BINOP: <ID: b> + <BINOP: <ID: c> * <CONST: INT 9>>>>>", iter.next().toString());
 
     }
 
@@ -168,11 +168,11 @@ public class TestAST {
         // a -= 9;
         // a *= 9;
         // a /= 9;
-        assertEquals("<ASSIGN: <ID: a> <BINOP: <ID: a> PLUS <CONST: INT 9>>>", iter.next().toString());
-        assertEquals("<ASSIGN: <ID: a> <BINOP: <ID: a> PLUS <CONST: INT 9>>>", iter.next().toString());
-        assertEquals("<ASSIGN: <ID: a> <BINOP: <ID: a> MINUS <CONST: INT 9>>>", iter.next().toString());
-        assertEquals("<ASSIGN: <ID: a> <BINOP: <ID: a> MULTIP <CONST: INT 9>>>", iter.next().toString());
-        assertEquals("<ASSIGN: <ID: a> <BINOP: <ID: a> DIVISION <CONST: INT 9>>>", iter.next().toString());
+        assertEquals("<ASSIGN: <ID: a> <BINOP: <ID: a> + <CONST: INT 9>>>", iter.next().toString());
+        assertEquals("<ASSIGN: <ID: a> <BINOP: <ID: a> + <CONST: INT 9>>>", iter.next().toString());
+        assertEquals("<ASSIGN: <ID: a> <BINOP: <ID: a> - <CONST: INT 9>>>", iter.next().toString());
+        assertEquals("<ASSIGN: <ID: a> <BINOP: <ID: a> * <CONST: INT 9>>>", iter.next().toString());
+        assertEquals("<ASSIGN: <ID: a> <BINOP: <ID: a> / <CONST: INT 9>>>", iter.next().toString());
     }
 
     @Test
@@ -201,8 +201,8 @@ public class TestAST {
         assertEquals("<ASSIGN: <ID: num> <CONST: INT 5>>", iter.next().toString());
         assertEquals("<ASSIGN: <ID: num> <ID: id>>", iter.next().toString());
         assertEquals("num = (num * (id + 5.0))", iter.next().toStringConcise());
-        assertEquals("<ASSIGN: <ID: id> <BINOP: <ID: id> DIVISION <CONST: INT 5>>>", iter.next().toString());
-        assertEquals("<ASSIGN: <ID: num> <BINOP: <ID: id> MULTIP <ID: id>>>", iter.next().toString());
+        assertEquals("<ASSIGN: <ID: id> <BINOP: <ID: id> / <CONST: INT 5>>>", iter.next().toString());
+        assertEquals("<ASSIGN: <ID: num> <BINOP: <ID: id> * <ID: id>>>", iter.next().toString());
         assertEquals("id = (id + (5 - (8 * (6.0 / 2))))", iter.next().toStringConcise());
         assertEquals("num = ((id * 5) - ((8.0 * 6) + 2))", iter.next().toStringConcise());
         assertEquals("<PRINT: <ID: num>>", iter.next().toString());
