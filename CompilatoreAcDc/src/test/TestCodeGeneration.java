@@ -86,4 +86,49 @@ public class TestCodeGeneration {
         assertEquals("5 11 - sa", iter.next());
     }
 
+    @Test
+    void testGenerale1() throws FileNotFoundException, SyntacticException {
+        NodeProgram nP = new Parser(new Scanner(testPath + "generale1.txt")).parse();
+        var tcVisit = new TypeCheckingVisitor();
+        nP.accept(tcVisit);
+        var genVisit = new CodeGeneratorVisitor();
+        nP.accept(genVisit);
+
+        var iter = genVisit.getDcCode();
+        assertEquals("10 sa", iter.next());
+        assertEquals("0.5 sb", iter.next());
+        assertEquals("5 k la lb * sb 0 k", iter.next());
+        assertEquals("lb p P", iter.next());
+    }
+
+    @Test
+    void testGenerale2() throws FileNotFoundException, SyntacticException {
+        NodeProgram nP = new Parser(new Scanner(testPath + "generale2.txt")).parse();
+        var tcVisit = new TypeCheckingVisitor();
+        nP.accept(tcVisit);
+        var genVisit = new CodeGeneratorVisitor();
+        nP.accept(genVisit);
+
+        var iter = genVisit.getDcCode();
+        assertEquals("2.5 sa", iter.next());
+        assertEquals("la 1.3 + sb", iter.next());
+        assertEquals("lb p P", iter.next());
+    }
+
+    @Test
+    void testGenerale3() throws FileNotFoundException, SyntacticException {
+        NodeProgram nP = new Parser(new Scanner(testPath + "generale3.txt")).parse();
+        var tcVisit = new TypeCheckingVisitor();
+        nP.accept(tcVisit);
+        var genVisit = new CodeGeneratorVisitor();
+        nP.accept(genVisit);
+
+        var iter = genVisit.getDcCode();
+        assertEquals("8.5 5 k 1 + sa 0 k", iter.next());
+        assertEquals("", iter.next());
+        assertEquals("10 3 / sb", iter.next());
+        assertEquals("la lb - sa", iter.next());
+        assertEquals("la p P", iter.next());
+
+    }
 }

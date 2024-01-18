@@ -1,0 +1,3 @@
+float pippo = 2.5;
+float pluto = pippo + 1.3;
+print pluto;

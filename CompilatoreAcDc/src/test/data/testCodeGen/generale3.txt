@@ -1,0 +1,5 @@
+float vmobile = 8.5 + 1;
+float var;
+var = 10 / 3;
+vmobile -= var;
+print vmobile;

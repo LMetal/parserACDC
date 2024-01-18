@@ -3,14 +3,13 @@ package visitor;
 import AST.*;
 import symbolTable.Registri;
 import symbolTable.SymbolTable;
-import typeDescriptor.TypeTD;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class CodeGeneratorVisitor implements IVisitor{
     private String codiceDc;
-    private ArrayList<String> linesCode;
+    private final ArrayList<String> linesCode;
 
     public CodeGeneratorVisitor(){
         linesCode = new ArrayList<>();
@@ -26,7 +25,6 @@ public class CodeGeneratorVisitor implements IVisitor{
     public void visit(NodeProgram node) {
         for(NodeDecSt line: node.getDecStm()){
             line.accept(this);
-            if(codiceDc.contains(" k ")) codiceDc = codiceDc.concat(" 0 k");
             linesCode.add(codiceDc);
             codiceDc = "";
         }
@@ -34,8 +32,6 @@ public class CodeGeneratorVisitor implements IVisitor{
 
     @Override
     public void visit(NodeId node) {
-        char reg = SymbolTable.lookup(node.getName()).getRegister();
-        codiceDc = "l"+reg;
     }
 
     @Override
@@ -48,6 +44,7 @@ public class CodeGeneratorVisitor implements IVisitor{
             String init = codiceDc;
             char reg = SymbolTable.lookup(node.getNodeId().getName()).getRegister();
             codiceDc = init + " s" + reg;
+            if(codiceDc.contains(" k ")) codiceDc = codiceDc.concat(" 0 k");
         }
     }
 
@@ -68,7 +65,6 @@ public class CodeGeneratorVisitor implements IVisitor{
     @Override
     public void visit(NodeConvert nodeConvert) {
         nodeConvert.getExpr().accept(this);
-        String expr = codiceDc;
         codiceDc = "5 k " + codiceDc;
     }
 
@@ -79,12 +75,14 @@ public class CodeGeneratorVisitor implements IVisitor{
 
     @Override
     public void visit(NodeDeref nodeDeref) {
-        nodeDeref.getId().accept(this);
+        char reg = SymbolTable.lookup(nodeDeref.getId().getName()).getRegister();
+        codiceDc = "l"+reg;
     }
 
     @Override
     public void visit(NodePrint nodePrint) {
-        codiceDc = "l" + nodePrint.getId().getName() + " p P";
+        char reg = SymbolTable.lookup(nodePrint.getId().getName()).getRegister();
+        codiceDc = "l" + reg + " p P";
     }
 
     @Override
@@ -93,5 +91,7 @@ public class CodeGeneratorVisitor implements IVisitor{
         String exprCode = codiceDc;
         char reg = SymbolTable.lookup(nodeAssign.getId().getName()).getRegister();
         codiceDc = exprCode + " s" + reg;
+        if(codiceDc.contains(" k ")) codiceDc = codiceDc.concat(" 0 k");
+        else codiceDc = exprCode + " s" + reg;
     }
 }
