@@ -141,68 +141,35 @@ public class Parser {
 
         switch (t.getTipo()){
             case ID, FLOAT, INT -> { //Exp -> Tr ExpP
-                NodeExpr expr = parseTr();
-
-                // salvo eventuale op prima della chiamata
-                LangOper op = null;
-                if(scanner.peekToken() != null){
-                    if(scanner.peekToken().getTipo() == TokenType.PLUS) op = LangOper.PLUS;
-                    if(scanner.peekToken().getTipo() == TokenType.MINUS) op = LangOper.MINUS;
-                }
-
-                NodeExpr expr2 = parseExpP();
-
-                if(expr2 != null) expr = new NodeBinOp(expr, op, expr2);
-
-                return expr;
+                NodeExpr tr = parseTr();
+                return parseExpP(tr);
             }
             default -> throw new SyntacticException("ID, FLOAT, INT", t.getRiga(), t.getTipo());
         }
     }
 
-    private NodeExpr parseExpP() throws LexicalException, SyntacticException, IOException {
+    private NodeExpr parseExpP(NodeExpr tr) throws LexicalException, SyntacticException, IOException {
         Token t = scanner.peekToken();
-        NodeExpr expr, expr2;
 
         switch (t.getTipo()){
             case PLUS -> {  // ExpP -> + Tr ExpP
                 match(TokenType.PLUS);
-                expr = parseTr();
+                NodeExpr tr2 = parseTr();
+                NodeExpr expP = parseExpP(tr2);
 
-                // salvo eventuale op prima della chiamata
-                LangOper op = null;
-                if(scanner.peekToken() != null){
-                    if(scanner.peekToken().getTipo() == TokenType.PLUS) op = LangOper.PLUS;
-                    if(scanner.peekToken().getTipo() == TokenType.MINUS) op = LangOper.MINUS;
-                }
-
-                expr2 = parseExpP();
-
-                if(expr2 != null) expr = new NodeBinOp(expr, op, expr2);
-
-                return expr;
+                return new NodeBinOp(tr, LangOper.PLUS, expP);
             }
 
             case MINUS -> { // ExpP -> - Tr ExpP
                 match(TokenType.MINUS);
-                expr = parseTr();
+                NodeExpr tr2 = parseTr();
+                NodeExpr expP = parseExpP(tr2);
 
-                // salvo eventuale op prima della chiamata
-                LangOper op = null;
-                if(scanner.peekToken() != null){
-                    if(scanner.peekToken().getTipo() == TokenType.PLUS) op = LangOper.PLUS;
-                    if(scanner.peekToken().getTipo() == TokenType.MINUS) op = LangOper.MINUS;
-                }
-
-                expr2 = parseExpP();
-
-                if(expr2 != null) expr = new NodeBinOp(expr, op, expr2);
-
-                return expr;
+                return new NodeBinOp(tr, LangOper.MINUS, expP);
             }
 
             case SEMI -> {  // ExpP ->
-                return null;
+                return tr;
             }
 
             default -> throw new SyntacticException("PLUS, MINUS", t.getRiga(), t.getTipo());
@@ -214,63 +181,37 @@ public class Parser {
 
         switch (t.getTipo()){
             case ID, FLOAT, INT -> {    // Tr -> Val TrP
-                NodeExpr expr = parseVal();
+                NodeExpr val = parseVal();
 
-                // salvo eventuale op prima della chiamata
-                LangOper op = null;
-                if(scanner.peekToken() != null){
-                    if(scanner.peekToken().getTipo() == TokenType.MULTIP) op = LangOper.MULTIP;
-                    if(scanner.peekToken().getTipo() == TokenType.DIVISION) op = LangOper.DIVISION;
-                }
-
-                NodeExpr expr2 = parseTrP();
-
-                if(expr2 != null) return new NodeBinOp(expr, op, expr2);
-                else return expr;
+                return parseTrP(val);
             }
 
             default -> throw new SyntacticException("ID, FLOAT, INT", t.getRiga(), t.getTipo());
         }
     }
 
-    private NodeExpr parseTrP() throws LexicalException, SyntacticException, IOException {
+    private NodeExpr parseTrP(NodeExpr val) throws LexicalException, SyntacticException, IOException {
         Token t = scanner.peekToken();
 
         switch (t.getTipo()){
             case MULTIP -> {    //TrP -> * Val Trp
                 match(TokenType.MULTIP);
-                NodeExpr val1 = parseVal();
+                NodeExpr val2 = parseVal();
+                NodeExpr trp = parseTrP(val2);
 
-                // salvo eventuale op prima della chiamata
-                LangOper op = null;
-                if(scanner.peekToken() != null){
-                    if(scanner.peekToken().getTipo() == TokenType.MULTIP) op = LangOper.MULTIP;
-                    if(scanner.peekToken().getTipo() == TokenType.DIVISION) op = LangOper.DIVISION;
-                }
-                NodeExpr val2 = parseTrP();
-
-                if(val2 == null)return val1;
-                else return new NodeBinOp(val1, op, val2);
+                return new NodeBinOp(val, LangOper.MULTIP, trp);
             }
 
             case DIVISION -> {    //TrP -> / Val Trp
                 match(TokenType.DIVISION);
-                NodeExpr val1 = parseVal();
+                NodeExpr val2 = parseVal();
+                NodeExpr trp = parseTrP(val2);
 
-                // salvo eventuale op prima della chiamata
-                LangOper op = null;
-                if(scanner.peekToken() != null){
-                    if(scanner.peekToken().getTipo() == TokenType.MULTIP) op = LangOper.MULTIP;
-                    if(scanner.peekToken().getTipo() == TokenType.DIVISION) op = LangOper.DIVISION;
-                }
-
-                NodeExpr val2 = parseTrP();
-                if(val2 == null)return val1;
-                else return new NodeBinOp(val1, op, val2);
+                return new NodeBinOp(val, LangOper.DIVISION, trp);
             }
 
             case MINUS, PLUS, SEMI ->{  //TrP ->
-                return null;
+                return val;
             }
 
             default -> throw new SyntacticException("MULTIP, DIVISION, PLUS, MINUS, SEMI", t.getRiga(), t.getTipo());
