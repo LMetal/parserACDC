@@ -9,6 +9,7 @@ import java.util.Iterator;
 
 public class CodeGeneratorVisitor implements IVisitor{
     private String codiceDc;
+    private String log;
     private final ArrayList<String> linesCode;
 
     public CodeGeneratorVisitor(){
@@ -32,12 +33,19 @@ public class CodeGeneratorVisitor implements IVisitor{
 
     @Override
     public void visit(NodeId node) {
+        char reg = SymbolTable.lookup(node.getName()).getRegister();
+        codiceDc = String.valueOf(reg);
     }
 
     @Override
     public void visit(NodeDecl node) {
         var att = SymbolTable.lookup(node.getNodeId().getName());
-        att.setRegister(Registri.newRegister());
+        Character newReg = Registri.newRegister();
+        if(newReg == null){
+            log = "Registri non sufficienti";
+            return;
+        }
+        att.setRegister(newReg);
 
         if(node.getInit() != null){
             node.getInit().accept(this);
@@ -75,23 +83,29 @@ public class CodeGeneratorVisitor implements IVisitor{
 
     @Override
     public void visit(NodeDeref nodeDeref) {
-        char reg = SymbolTable.lookup(nodeDeref.getId().getName()).getRegister();
-        codiceDc = "l"+reg;
+        nodeDeref.getId().accept(this);
+        codiceDc = "l"+codiceDc;
     }
 
     @Override
     public void visit(NodePrint nodePrint) {
-        char reg = SymbolTable.lookup(nodePrint.getId().getName()).getRegister();
-        codiceDc = "l" + reg + " p P";
+        nodePrint.getId().accept(this);
+        codiceDc = "l" + codiceDc + " p P";
     }
 
     @Override
     public void visit(NodeAssign nodeAssign) {
         nodeAssign.getExpr().accept(this);
         String exprCode = codiceDc;
-        char reg = SymbolTable.lookup(nodeAssign.getId().getName()).getRegister();
+
+        nodeAssign.getId().accept(this);
+        String reg = codiceDc;
+
         codiceDc = exprCode + " s" + reg;
         if(codiceDc.contains(" k ")) codiceDc = codiceDc.concat(" 0 k");
-        else codiceDc = exprCode + " s" + reg;
+    }
+
+    public String getLog() {
+        return log;
     }
 }

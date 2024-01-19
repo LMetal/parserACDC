@@ -129,6 +129,16 @@ public class TestCodeGeneration {
         assertEquals("10 3 / sb", iter.next());
         assertEquals("la lb - sa", iter.next());
         assertEquals("la p P", iter.next());
+    }
 
+    @Test
+    void testRegistriComletati() throws FileNotFoundException, SyntacticException {
+        NodeProgram nP = new Parser(new Scanner(testPath + "finiscedReg.txt")).parse();
+        var tcVisit = new TypeCheckingVisitor();
+        nP.accept(tcVisit);
+        var genVisit = new CodeGeneratorVisitor();
+        nP.accept(genVisit);
+
+        assertEquals("Registri non sufficienti", genVisit.getLog());
     }
 }
