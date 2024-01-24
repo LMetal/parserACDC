@@ -1,4 +1,0 @@
-
-float numberfloat;
-int floati;
-print pippo;
