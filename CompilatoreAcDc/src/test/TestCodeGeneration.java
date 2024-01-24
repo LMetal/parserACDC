@@ -13,6 +13,9 @@ import java.io.FileNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Test generazione del codice
+ */
 public class TestCodeGeneration {
     String testPath = "CompilatoreAcDc"+ File.separator +"src"+ File.separator +"test"+ File.separator +"data"+ File.separator +"testCodeGen"+ File.separator;
 

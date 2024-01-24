@@ -5,9 +5,21 @@ package AST;
  * E' definito un metodo toString che ritorna in carattere associato all'operazione
  */
 public enum LangOper {
+    /**
+     * Operazione addizione
+     */
     PLUS,
+    /**
+     * Operazione sottrazione
+     */
     MINUS,
+    /**
+     * Operazione moltiplicazione
+     */
     MULTIP,
+    /**
+     * Opèrazione divisione
+     */
     DIVISION;
 
     /**

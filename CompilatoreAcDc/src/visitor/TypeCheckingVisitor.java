@@ -8,21 +8,44 @@ import typeDescriptor.TypeTD;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+
+/**
+ * Implementa un visitatore per l'analisi semantica e il controllo dei tipi nell'AST.
+ */
 public class TypeCheckingVisitor implements IVisitor{
+    /**
+     * Il tipo risultante dall'analisi semantica.
+     */
     private TypeDescriptor resType;
+
+    /**
+     * Lista di tipi risultanti per ogni riga di codice ac
+     */
     private final ArrayList<TypeDescriptor> linesRes;
 
-    public TypeCheckingVisitor(){
+    /**
+     * Costruisce un nuovo oggetto TypeCheckingVisitor e inizializza la tabella
+     */
+    public TypeCheckingVisitor() {
         SymbolTable.init();
         linesRes = new ArrayList<>();
     }
 
-
+    /**
+     * Ritorna un iteratore per la lista dei tipi risultanti per ogni riga
+     *
+     * @return Un iteratore per la lista dei tipi risultanti
+     */
     public Iterator<TypeDescriptor> getLinesRes(){
         return linesRes.iterator();
     }
 
 
+    /**
+     * Scorre tutte le righe e salva i risultati
+     *
+     * @param node NodeProgram da visitare
+     */
     @Override
     public void visit(NodeProgram node) {
         int row = 0;
@@ -34,6 +57,9 @@ public class TypeCheckingVisitor implements IVisitor{
         }
     }
 
+    /**
+     * @param node NodeId da visitare
+     */
     @Override
     public void visit(NodeId node) {
         if(SymbolTable.lookup(node.getName()) == null) resType = new TypeDescriptor(TypeTD.ERROR, node.getName() + " non dichiarato");
@@ -43,6 +69,9 @@ public class TypeCheckingVisitor implements IVisitor{
             resType = new TypeDescriptor(TypeTD.FLOAT);
     }
 
+    /**
+     * @param node NodeDecl da visitare
+     */
     @Override
     public void visit(NodeDecl node) {
         TypeDescriptor idRes, initRes;
@@ -74,6 +103,9 @@ public class TypeCheckingVisitor implements IVisitor{
 
     }
 
+    /**
+     * @param node NodeBinOp da visitare
+     */
     @Override
     public void visit(NodeBinOp node) {
         node.getLeft().accept(this);
@@ -104,22 +136,34 @@ public class TypeCheckingVisitor implements IVisitor{
         }
     }
 
+    /**
+     * @param nodeConvert NodeConvert da visitare
+     */
     @Override
     public void visit(NodeConvert nodeConvert) {
         resType = new TypeDescriptor(TypeTD.FLOAT);
     }
 
+    /**
+     * @param nodeConst NodeConst da visitare
+     */
     @Override
     public void visit(NodeConst nodeConst) {
         if(nodeConst.getType() == LangType.INT) resType = new TypeDescriptor(TypeTD.INT);
         else resType = new TypeDescriptor(TypeTD.FLOAT);
     }
 
+    /**
+     * @param nodeDeref NodeDeref da visitare
+     */
     @Override
     public void visit(NodeDeref nodeDeref) {
         nodeDeref.getId().accept(this);
     }
 
+    /**
+     * @param nodePrint NodePrint da visitare
+     */
     @Override
     public void visit(NodePrint nodePrint) {
         nodePrint.getId().accept(this);
@@ -128,6 +172,9 @@ public class TypeCheckingVisitor implements IVisitor{
         }
     }
 
+    /**
+     * @param nodeAssign NodeAssign da visitare
+     */
     @Override
     public void visit(NodeAssign nodeAssign) {
         nodeAssign.getId().accept(this);

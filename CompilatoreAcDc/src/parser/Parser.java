@@ -9,13 +9,27 @@ import token.TokenType;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Classe che implementa un parser e creazione dell'AST
+ * Analisi Sintattica
+ */
 public class Parser {
+    /**
+     * Scanner da utilizzare per ottenere i Token
+     */
     private final Scanner scanner;
 
+    /**
+     * @param s Scanner da utilizzare per il parsing
+     */
     public Parser(Scanner s){
         this.scanner = s;
     }
 
+    /**
+     * @return Il NodeProgram root dell'AST
+     * @throws SyntacticException Se emergono errori sintattici durante il parsing
+     */
     public NodeProgram parse() throws SyntacticException {
         try {
             return parsePrg();
@@ -186,7 +200,10 @@ public class Parser {
     }
 
     /**
-     * @return
+     * Implementa la regola della grammatica:
+     *      Exp -> Tr ExpP
+     *
+     * @return Il nuovo nodo espressione
      * @throws LexicalException Se lo scanner ha trovato errori
      * @throws SyntacticException Se il parsing ha trovato errori
      * @throws IOException Se avviene un errore nella lettura da file
@@ -204,8 +221,13 @@ public class Parser {
     }
 
     /**
-     * @param tr
-     * @return
+     * Implementa le regole della grammatica:
+     *      ExpP -> + Tr ExpP
+     *      ExpP -> - Tr ExpP
+     *      ExpP ->
+     *
+     * @param tr La parte sinistra dell'espressione
+     * @return Il nuovo nodo espressione
      * @throws LexicalException Se lo scanner ha trovato errori
      * @throws SyntacticException Se il parsing ha trovato errori
      * @throws IOException Se avviene un errore nella lettura da file
@@ -239,7 +261,10 @@ public class Parser {
     }
 
     /**
-     * @return
+     * Implementa la regola della grammatica:
+     *      Tr -> Val TrP
+     *
+     * @return Il nuovo nodo espressione
      * @throws LexicalException Se lo scanner ha trovato errori
      * @throws SyntacticException Se il parsing ha trovato errori
      * @throws IOException Se avviene un errore nella lettura da file
@@ -259,8 +284,13 @@ public class Parser {
     }
 
     /**
-     * @param val
-     * @return
+     * Implementa le regole della grammatica:
+     *      TrP -> * Val Trp
+     *      TrP -> / Val TrP
+     *      TrP ->
+     *
+     * @param val La parte sinistra dell'espressione
+     * @return Il nuovo nodo espressione
      * @throws LexicalException Se lo scanner ha trovato errori
      * @throws SyntacticException Se il parsing ha trovato errori
      * @throws IOException Se avviene un errore nella lettura da file
@@ -295,7 +325,11 @@ public class Parser {
 
 
     /**
-     * @return
+     * Implementa le regole della grammatica:
+     *      Ty -> float
+     *      Ty -> int
+     *
+     * @return Il tipo corrispondente
      * @throws LexicalException Se lo scanner ha trovato errori
      * @throws SyntacticException Se il parsing ha trovato errori
      * @throws IOException Se avviene un errore nella lettura da file
@@ -317,7 +351,10 @@ public class Parser {
     }
 
     /**
-     * @return
+     * Implementa le regole della grammatica:
+     *      Val -> intVal | floatVal | id
+     *
+     * @return Il nuovo nodo espressione
      * @throws LexicalException Se lo scanner ha trovato errori
      * @throws SyntacticException Se il parsing ha trovato errori
      * @throws IOException Se avviene un errore nella lettura da file

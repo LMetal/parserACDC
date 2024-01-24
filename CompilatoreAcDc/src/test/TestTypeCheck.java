@@ -13,6 +13,9 @@ import java.io.FileNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Test type checking
+ */
 public class TestTypeCheck {
     String testPath = "CompilatoreAcDc"+ File.separator +"src"+ File.separator +"test"+ File.separator +"data"+ File.separator +"testTypeChecking"+ File.separator;
 

@@ -12,8 +12,17 @@ import java.util.Iterator;
  * Lavora con il pattern visitor
  */
 public class CodeGeneratorVisitor implements IVisitor{
+    /**
+     * Stringa codice dc
+     */
     private String codiceDc;
+    /**
+     * Eventuale log di errore
+     */
     private String log;
+    /**
+     * Lista delle linee di codice dc generate
+     */
     private final ArrayList<String> linesCode;
 
     /**
@@ -122,23 +131,43 @@ public class CodeGeneratorVisitor implements IVisitor{
         codiceDc = "5 k " + codiceDc;
     }
 
+    /**
+     * Ottiene il valore del numero
+     *
+     * @param nodeConst Nodo nell'AST
+     */
     @Override
     public void visit(NodeConst nodeConst) {
         codiceDc = nodeConst.getValue();
     }
 
+    /**
+     * Genera il codice Dc per caricare in cima allo stack il valore del registro associato all'id contenuto in nodeDeref
+     *
+     * @param nodeDeref Nodo contenente un id
+     */
     @Override
     public void visit(NodeDeref nodeDeref) {
         nodeDeref.getId().accept(this);
         codiceDc = "l"+codiceDc;
     }
 
+    /**
+     * Genera il codice Dc per la stampa del valore del registro associato all'id contenuto in nodePrint
+     *
+     * @param nodePrint Nodo dell'AST, contiene un NodeId
+     */
     @Override
     public void visit(NodePrint nodePrint) {
         nodePrint.getId().accept(this);
         codiceDc = "l" + codiceDc + " p P";
     }
 
+    /**
+     * Genera il codice Dc per assegnare a un registro il risultato di un'espressione
+     *
+     * @param nodeAssign Nodo dell'AST
+     */
     @Override
     public void visit(NodeAssign nodeAssign) {
         nodeAssign.getExpr().accept(this);
@@ -151,6 +180,11 @@ public class CodeGeneratorVisitor implements IVisitor{
         if(codiceDc.contains(" k ")) codiceDc = codiceDc.concat(" 0 k");
     }
 
+    /**
+     * Ritorna il log di errore
+     *
+     * @return Il log di errore se presente, altrimenti null
+     */
     public String getLog() {
         return log;
     }

@@ -11,6 +11,10 @@ import java.util.List;
 
 import token.*;
 
+/**
+ * Rappresenta un oggetto che legge caratteri da file e ritorna i token associati
+ * Analisi lessicale
+ */
 public class Scanner {
 	/**
 	 * EOF char
@@ -303,6 +307,14 @@ public class Scanner {
 		return new Token(charTypeMap.get(saveOp), riga);
 	}
 
+	/**
+	 * Consuma tutti i caratteri fino a trovarne uno tra quelli di skip o appartenenti al linguaggio.
+	 * Aiuta ad avere codice piu' pulito nel caso di eccezioni
+	 *
+	 * @param buffer Builder stringa gia' iniziato
+	 * @throws IOException Se ci sono errori col file
+	 * @throws LexicalException Dopo aver consumato
+	 */
 	private void consumeAllAndException(StringBuilder buffer) throws IOException, LexicalException {
 		char nextChar = peekChar();
 		char errore = peekChar();
@@ -313,19 +325,43 @@ public class Scanner {
 		throw new LexicalException(buffer.toString(), riga, errore);
 	}
 
+	/**
+	 * Permette di scrivere codice piu' pulito, aggiunge il prossimo carattere alla stringa e lo consuma.
+	 * E' ripetuto molte volte nello scanner
+	 *
+	 * @param s Builder della stringa
+	 * @return Il prossimo carattere
+	 * @throws IOException Se ci sono errori col file
+	 */
 	private char consumeAdd(StringBuilder s) throws IOException {
 		s.append(readChar());
 		return peekChar();
 	}
 
+	/**
+	 * @param c Carattere da controllare
+	 * @return True se non appartiene all'alfabeto, altrimenti False
+	 */
 	private boolean notInAlphabet(char c){
 		return !letters.contains(c) && !numbers.contains(c) && !charTypeMap.containsKey(c) && !skpChars.contains(c) && c != '.';
 	}
 
+	/**
+	 * Legge e consuma un carattere dal file, lo ritorna
+	 *
+	 * @return Carattere letto dal file
+	 * @throws IOException Se ci sono errori col file
+	 */
 	private char readChar() throws IOException {
 		return ((char) this.buffer.read());
 	}
 
+	/**
+	 * Legge ma non consuma un carattere dal file, lo ritorna
+	 *
+	 * @return Carattere letto dal file
+	 * @throws IOException Se ci sono errori col file
+	 */
 	private char peekChar() throws IOException {
 		char c = (char) buffer.read();
 		buffer.unread(c);
