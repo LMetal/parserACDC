@@ -12,31 +12,68 @@ import java.util.List;
 import token.*;
 
 public class Scanner {
-	final char EOF = (char) -1; 
+	/**
+	 * EOF char
+	 */
+	final char EOF = (char) -1;
+
+	/**
+	 * Numero della stringa
+	 */
 	private int riga;
+
+	/**
+	 * Oggetto che permette di leggere un carattere alla volta da file, permette di annullare la lettura di un carattere
+	 */
 	private final PushbackReader buffer;
-	//private String log;
+
+	/**
+	 * Token, salva il token appena letto
+	 */
 	private Token token;
 
-	// skpChars: insieme caratteri di skip (include EOF) e inizializzazione
-	// letters: insieme lettere e inizializzazione
-	// digits: cifre e inizializzazione
+	/**
+	 * Insieme caratteri di skip (include EOF) e inizializzazione
+	 */
 	ArrayList<Character> skpChars = new ArrayList<>();
+
+	/**
+	 * Insieme lettere
+	 */
 	ArrayList<Character> letters = new ArrayList<>();
+	/**
+	 * Inizializzazione delle lettere
+	 */
 	List<Character> alphabet = Arrays.asList('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z');
 
-
+	/**
+	 * Insieme cifre
+	 */
 	ArrayList<Character> digits = new ArrayList<>();
+	/**
+	 * Inizializza le cifre
+	 */
 	List<Character> numbers = Arrays.asList('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
-	// char_type_Map: mapping fra caratteri '+', '-', '*', '/', ';', '=', ';' e il
-	// TokenType corrispondente
+	/**
+	 * Mapping fra caratteri '+', '-', '*', '/', ';', '=', ';' e il
+	 * TokenType corrispondente
+	 */
 	HashMap<Character, TokenType> charTypeMap = new HashMap<>();
 
-	// keyWordsMap: mapping fra le stringhe "print", "float", "int" e il
-	// TokenType  corrispondente
+
+	/**
+	 * Mapping fra le stringhe "print", "float", "int" e il
+	 * TokenType  corrispondente
+	 */
 	HashMap<String, TokenType> keyWordsMap = new HashMap<>();
 
+	/**
+	 * Costruisce lo scanner, inizializza le liste di caratteri
+	 *
+	 * @param fileName Il file da leggere
+	 * @throws FileNotFoundException Errore apertura file
+	 */
 	public Scanner(String fileName) throws FileNotFoundException {
 
 		this.buffer = new PushbackReader(new FileReader(fileName));
@@ -64,6 +101,15 @@ public class Scanner {
 
 	}
 
+	/**
+	 * Scorre il file e ritorna il Token associato alla prossima stringa del file.
+	 * Se è presente un token in Token lo ritorna
+	 * Consuma il token
+	 *
+	 * @return Il prossimo token
+	 * @throws IOException Se avviene un errore durante la lettura da file
+	 * @throws LexicalException Se viene trovata una stringa non appartenente al linguaggio
+	 */
 	public Token nextToken() throws IOException, LexicalException {
 		char nextChar;
 
@@ -120,6 +166,12 @@ public class Scanner {
 		throw new LexicalException(String.valueOf(nextChar), riga, readChar());
 	}
 
+	/**
+	 * Ritorna il prossimo token e lo salva per una peekToken o nextToken futura.
+	 *
+	 * @return Il prossimo token
+	 * @throws LexicalException Se viene trovata una stringa non appartenente al linguaggio
+	 */
 	public Token peekToken() throws LexicalException {
 		try{
 			if(token == null)token = nextToken();
@@ -129,6 +181,13 @@ public class Scanner {
 		return token;
 	}
 
+	/**
+	 * Scorre il file basandosi sull'automa a stati finiti
+	 *
+	 * @return Token di un numero
+	 * @throws IOException Se avviene errore nel file
+	 * @throws LexicalException Se viene trovata una stringa non appartenente al linguaggio
+	 */
 	private Token scanNumber() throws IOException, LexicalException {
 		StringBuilder bufferNumber = new StringBuilder();
 		char nextChar = peekChar();
@@ -168,6 +227,13 @@ public class Scanner {
 		return scanFloat(bufferNumber);
 	}
 
+	/**
+	 * Scorre il file basandosi sull'automa a stati finiti
+	 *
+	 * @return Token di un numero float
+	 * @throws IOException Se avviene errore nel file
+	 * @throws LexicalException Se viene trovata una stringa non appartenente al linguaggio
+	 */
 	private Token scanFloat(StringBuilder bufferNumber) throws IOException, LexicalException {
 		char nextChar = consumeAdd(bufferNumber);
 		int numDecimali = 0;
@@ -186,7 +252,13 @@ public class Scanner {
 		return new Token(TokenType.FLOAT, riga, bufferNumber.toString());
 	}
 
-
+	/**
+	 * Scorre il file basandosi sull'automa a stati finiti
+	 *
+	 * @return Token di un id
+	 * @throws IOException Se avviene errore nel file
+	 * @throws LexicalException Se viene trovata una stringa non appartenente al linguaggio
+	 */
 	private Token scanId() throws IOException, LexicalException {
 		StringBuilder bufferLetters = new StringBuilder();
 		char nextChar = peekChar();
@@ -204,6 +276,12 @@ public class Scanner {
 		else return new Token(TokenType.ID, riga, bufferLetters.toString());
 	}
 
+	/**
+	 * Scorre il file basandosi sull'automa a stati finiti
+	 *
+	 * @return Token di un
+	 * @throws IOException Se avviene errore nel file
+	 */
 	private Token scanOp() throws IOException {
 		char nextChar = peekChar();
 		char saveOp;

@@ -24,11 +24,20 @@ public class Parser {
         }
     }
 
+    /**
+     * Implementa la regola della grammatica:
+     *      Prg -> DSs $
+     *
+     * @return Una arraylists di nodeDecStm delle linee gia' nell'AST
+     * @throws LexicalException Se lo scanner ha trovato errori
+     * @throws SyntacticException Se il parsing ha trovato errori
+     * @throws IOException Se avviene un errore nella lettura da file
+     */
     private NodeProgram parsePrg() throws LexicalException, SyntacticException, IOException {
         Token t = scanner.peekToken();
 
         switch (t.getTipo()){
-            case TYPE_INT, TYPE_FLOAT, ID, PRINT, EOF -> { // Prg -> DSs $
+            case TYPE_INT, TYPE_FLOAT, ID, PRINT, EOF -> {
                 ArrayList<NodeDecSt> declStmList = parseDSs();
                 match(TokenType.EOF);
                 return new NodeProgram(declStmList);
@@ -37,6 +46,17 @@ public class Parser {
         }
     }
 
+    /**
+     * Implementa le regole della grammatica:
+     *      DSs -> DCl DSs
+     *      DSs -> Stm DSs
+     *      DSs -> ϵ
+     *
+     * @return Una arraylists di nodeDecStm delle linee gia' nell'AST
+     * @throws LexicalException Se lo scanner ha trovato errori
+     * @throws SyntacticException Se il parsing ha trovato errori
+     * @throws IOException Se avviene un errore nella lettura da file
+     */
     private ArrayList<NodeDecSt> parseDSs() throws LexicalException, IOException, SyntacticException {
         Token t = scanner.peekToken();
 
@@ -64,6 +84,15 @@ public class Parser {
 
     }
 
+    /**
+     * Implementa la regola della grammatica:
+     *      Dcl -> Ty id DclP
+     *
+     * @return Nodo dichiarazione creato
+     * @throws LexicalException Se lo scanner ha trovato errori
+     * @throws SyntacticException Se il parsing ha trovato errori
+     * @throws IOException Se avviene un errore nella lettura da file
+     */
     private NodeDecl parseDcl() throws LexicalException, SyntacticException, IOException {
         Token t = scanner.peekToken();
 
@@ -80,6 +109,16 @@ public class Parser {
         }
     }
 
+    /**
+     * Implementa le regole della grammatica:
+     *      DclP -> ;
+     *      DclP -> opAss Exp
+     *
+     * @return Un nodo espressione se presente
+     * @throws LexicalException Se lo scanner ha trovato errori
+     * @throws SyntacticException Se il parsing ha trovato errori
+     * @throws IOException Se avviene un errore nella lettura da file
+     */
     private NodeExpr parseDclP() throws LexicalException, SyntacticException, IOException {
         Token t = scanner.peekToken();
 
@@ -100,6 +139,16 @@ public class Parser {
         }
     }
 
+    /**
+     * Implementa le regole della grammatica:
+     *      Stm -> id opAss Exp
+     *      Stm -> print id ;
+     *
+     * @return Un nuovo nodo statement
+     * @throws LexicalException Se lo scanner ha trovato errori
+     * @throws SyntacticException Se il parsing ha trovato errori
+     * @throws IOException Se avviene un errore nella lettura da file
+     */
     private NodeStm parseStm() throws LexicalException, SyntacticException, IOException {
         Token t = scanner.peekToken();
         NodeId id;
@@ -136,6 +185,12 @@ public class Parser {
         }
     }
 
+    /**
+     * @return
+     * @throws LexicalException Se lo scanner ha trovato errori
+     * @throws SyntacticException Se il parsing ha trovato errori
+     * @throws IOException Se avviene un errore nella lettura da file
+     */
     private NodeExpr parseExp() throws LexicalException, SyntacticException, IOException {
         Token t = scanner.peekToken();
 
@@ -148,6 +203,13 @@ public class Parser {
         }
     }
 
+    /**
+     * @param tr
+     * @return
+     * @throws LexicalException Se lo scanner ha trovato errori
+     * @throws SyntacticException Se il parsing ha trovato errori
+     * @throws IOException Se avviene un errore nella lettura da file
+     */
     private NodeExpr parseExpP(NodeExpr tr) throws LexicalException, SyntacticException, IOException {
         Token t = scanner.peekToken();
 
@@ -176,6 +238,12 @@ public class Parser {
         }
     }
 
+    /**
+     * @return
+     * @throws LexicalException Se lo scanner ha trovato errori
+     * @throws SyntacticException Se il parsing ha trovato errori
+     * @throws IOException Se avviene un errore nella lettura da file
+     */
     private NodeExpr parseTr() throws LexicalException, SyntacticException, IOException {
         Token t = scanner.peekToken();
 
@@ -190,6 +258,13 @@ public class Parser {
         }
     }
 
+    /**
+     * @param val
+     * @return
+     * @throws LexicalException Se lo scanner ha trovato errori
+     * @throws SyntacticException Se il parsing ha trovato errori
+     * @throws IOException Se avviene un errore nella lettura da file
+     */
     private NodeExpr parseTrP(NodeExpr val) throws LexicalException, SyntacticException, IOException {
         Token t = scanner.peekToken();
 
@@ -219,6 +294,12 @@ public class Parser {
     }
 
 
+    /**
+     * @return
+     * @throws LexicalException Se lo scanner ha trovato errori
+     * @throws SyntacticException Se il parsing ha trovato errori
+     * @throws IOException Se avviene un errore nella lettura da file
+     */
     private LangType parseTy() throws LexicalException, SyntacticException, IOException {
         Token t = scanner.peekToken();
         switch (t.getTipo()){
@@ -235,6 +316,12 @@ public class Parser {
         }
     }
 
+    /**
+     * @return
+     * @throws LexicalException Se lo scanner ha trovato errori
+     * @throws SyntacticException Se il parsing ha trovato errori
+     * @throws IOException Se avviene un errore nella lettura da file
+     */
     private NodeExpr parseVal() throws LexicalException, SyntacticException, IOException {
         Token t = scanner.peekToken();
         switch (t.getTipo()){
@@ -253,6 +340,15 @@ public class Parser {
 
     }
 
+    /**
+     * Controlla che il tipo del prossimo token sia uguale a type, se e' cosi' lo consuma
+     *
+     * @param type Tipo expected
+     * @return Il next token
+     * @throws LexicalException Se lo scanner ha trovato errori
+     * @throws SyntacticException Se type non e' uguale al tipo del prossimo token
+     * @throws IOException Se avviene un errore nella lettura da file
+     */
     private Token match(TokenType type) throws LexicalException, IOException, SyntacticException {
         Token t = scanner.peekToken();
 
