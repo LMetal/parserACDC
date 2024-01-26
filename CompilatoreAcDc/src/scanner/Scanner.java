@@ -241,13 +241,19 @@ public class Scanner {
 	private Token scanFloat(StringBuilder bufferNumber) throws IOException, LexicalException {
 		char nextChar = consumeAdd(bufferNumber);
 		int numDecimali = 0;
+		char error = '_';
 
 		while (digits.contains(nextChar)) {
-			if(numDecimali >= 5) consumeAllAndException(bufferNumber);
+			numDecimali++;
+			if(numDecimali == 6) {
+				error = nextChar;
+			}
 
 			nextChar = consumeAdd(bufferNumber);
-			numDecimali++;
 		}
+		if(numDecimali > 5) throw new LexicalException(bufferNumber.toString(), riga, error);
+
+
 		if(letters.contains(nextChar) || nextChar == '.') {
 			bufferNumber.append(nextChar);
 			throw new LexicalException(bufferNumber.toString(), riga, readChar());
@@ -258,6 +264,7 @@ public class Scanner {
 
 	/**
 	 * Scorre il file basandosi sull'automa a stati finiti
+	 * Stati 0 -> 3 -> 8
 	 *
 	 * @return Token di un id
 	 * @throws IOException Se avviene errore nel file
@@ -268,10 +275,12 @@ public class Scanner {
 		char nextChar = peekChar();
 
 		while(letters.contains(nextChar)){
+			//stato 3
 			nextChar = consumeAdd(bufferLetters);
 		}
 
 		if(digits.contains(nextChar)){
+			//stato 8
 			bufferLetters.append(readChar());
 			throw new LexicalException(bufferLetters.toString(),riga,nextChar);
 		}
@@ -280,54 +289,45 @@ public class Scanner {
 		else return new Token(TokenType.ID, riga, bufferLetters.toString());
 	}
 
+
 	/**
 	 * Scorre il file basandosi sull'automa a stati finiti
+	 * Stati 0 -> 4 -> 10
+	 * 		 0 -> 9
 	 *
-	 * @return Token di un
+	 * @return Token di un operazione
 	 * @throws IOException Se avviene errore nel file
 	 */
 	private Token scanOp() throws IOException {
+		// stato 0
 		char nextChar = peekChar();
 		char saveOp;
 
 		if(nextChar == '=')	{
+			// stato 9
 			readChar();
 			return new Token(TokenType.OP_ASS, riga, "=");
 		}
 		if(nextChar == ';'){
+			// stato 9
 			readChar();
 			return new Token(TokenType.SEMI, riga);
 		}
 
+		// stato 4
 		saveOp = readChar();
 		if(peekChar() == '='){
+			// stato 10
 			return new Token(TokenType.OP_ASS, riga, saveOp + String.valueOf(readChar()));
 		}
 
 		return new Token(charTypeMap.get(saveOp), riga);
 	}
 
-	/**
-	 * Consuma tutti i caratteri fino a trovarne uno tra quelli di skip o appartenenti al linguaggio.
-	 * Aiuta ad avere codice piu' pulito nel caso di eccezioni
-	 *
-	 * @param buffer Builder stringa gia' iniziato
-	 * @throws IOException Se ci sono errori col file
-	 * @throws LexicalException Dopo aver consumato
-	 */
-	private void consumeAllAndException(StringBuilder buffer) throws IOException, LexicalException {
-		char nextChar = peekChar();
-		char errore = peekChar();
-
-		while (!(charTypeMap.containsKey(nextChar) || skpChars.contains(nextChar))){
-			nextChar = consumeAdd(buffer);
-		}
-		throw new LexicalException(buffer.toString(), riga, errore);
-	}
 
 	/**
-	 * Permette di scrivere codice piu' pulito, aggiunge il prossimo carattere alla stringa e lo consuma.
-	 * E' ripetuto molte volte nello scanner
+	 * Permette di scrivere codice piu' pulito
+	 * Aggiunge il prossimo carattere alla stringa, lo consuma e ritorna il successivo
 	 *
 	 * @param s Builder della stringa
 	 * @return Il prossimo carattere

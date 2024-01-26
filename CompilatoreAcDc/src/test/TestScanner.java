@@ -171,6 +171,9 @@ public class TestScanner {
         assertEquals("Unexpected character in Token: 123.121212, at row: 4, unexpected character: 2", ex.getMessage());
 
         ex = assertThrows(LexicalException.class, s::nextToken);
+        assertEquals("Unexpected character in Token: 123.12345678, at row: 4, unexpected character: 6", ex.getMessage());
+
+        ex = assertThrows(LexicalException.class, s::nextToken);
         assertEquals("Unexpected character in Token: 11.., at row: 5, unexpected character: .", ex.getMessage());
 
         ex = assertThrows(LexicalException.class, s::nextToken);

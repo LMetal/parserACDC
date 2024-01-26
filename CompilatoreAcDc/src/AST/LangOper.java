@@ -18,7 +18,7 @@ public enum LangOper {
      */
     MULTIP,
     /**
-     * Opèrazione divisione
+     * Operazione divisione
      */
     DIVISION;
 

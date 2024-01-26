@@ -10,6 +10,9 @@ import java.io.FileNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Test generazione AST
+ */
 public class TestAST {
     String testPath = "CompilatoreAcDc"+ File.separator +"src"+ File.separator +"test"+ File.separator +"data"+ File.separator +"testAST"+ File.separator;
     @Test

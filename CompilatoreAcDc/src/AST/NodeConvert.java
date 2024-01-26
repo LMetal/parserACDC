@@ -3,7 +3,7 @@ package AST;
 import visitor.IVisitor;
 
 /**
- * Rappresenta un nodo dell'AST che rappresenta u casting
+ * Rappresenta un nodo dell'AST che rappresenta un casting
  */
 public class NodeConvert extends NodeExpr {
     /**

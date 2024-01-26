@@ -3,7 +3,7 @@ package AST;
 import visitor.IVisitor;
 
 /**
- * Classe astratta che ogni nodo nell AST implementa.
+ * Classe astratta che ogni nodo nell AST estende.
  * Alcuni metodi comuni a tutti i nodi concreti sono definiti in modo astratto
  */
 public abstract class NodeAST {

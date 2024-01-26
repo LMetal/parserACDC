@@ -75,9 +75,9 @@ public class NodeDecl extends NodeDecSt {
     }
 
     /**
-     * Ritorna l'espressione di inizializzazione della variabile
+     * Ritorna il nodo dell'espressione d'inizializzazione della variabile
      *
-     * @return L'espressione di inizializzazione (può essere null)
+     * @return L'espressione d'inizializzazione (puo' essere null)
      */
     public NodeExpr getInit() {
         return init;

@@ -224,7 +224,7 @@ public class Parser {
      * Implementa le regole della grammatica:
      *      ExpP -> + Tr ExpP
      *      ExpP -> - Tr ExpP
-     *      ExpP ->
+     *      ExpP -> ϵ
      *
      * @param tr La parte sinistra dell'espressione
      * @return Il nuovo nodo espressione
@@ -287,7 +287,7 @@ public class Parser {
      * Implementa le regole della grammatica:
      *      TrP -> * Val Trp
      *      TrP -> / Val TrP
-     *      TrP ->
+     *      TrP -> ϵ
      *
      * @param val La parte sinistra dell'espressione
      * @return Il nuovo nodo espressione

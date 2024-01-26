@@ -37,7 +37,7 @@ public class NodeBinOp extends NodeExpr {
     /**
      * Restituisce una rappresentazione in stringa del nodo di operazione binaria
      *
-     * @return Una stringa nel formato BINOP: left op right
+     * @return Una stringa nel formato &lt;BINOP: left op right&gt;
      */
     @Override
     public String toString() {

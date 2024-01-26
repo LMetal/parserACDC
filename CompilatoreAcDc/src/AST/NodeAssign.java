@@ -3,7 +3,7 @@ package AST;
 import visitor.IVisitor;
 
 /**
- * Rappresenta un nodo nell'Albero della Sintassi Astratta (AST) generato dall'analisi del codice AC.
+ * Rappresenta un nodo nell'AST generato dall'analisi del codice AC.
  * Questo nodo rappresenta un'istruzione di assegnazione.
  */
 public class NodeAssign extends NodeStm {

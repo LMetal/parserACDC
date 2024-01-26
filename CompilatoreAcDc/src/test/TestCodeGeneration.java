@@ -90,6 +90,22 @@ public class TestCodeGeneration {
     }
 
     @Test
+    void testConvert2() throws FileNotFoundException, SyntacticException {
+        NodeProgram nP = new Parser(new Scanner(testPath + "doppio_cast.txt")).parse();
+        var tcVisit = new TypeCheckingVisitor();
+        nP.accept(tcVisit);
+        var genVisit = new CodeGeneratorVisitor();
+        nP.accept(genVisit);
+
+        var iter = genVisit.getDcCode();
+        assertEquals("0 sa", iter.next());
+        assertEquals("5 k 8 9.0 * 5 k la + sb 0 k", iter.next());
+        assertEquals("lb p P", iter.next());
+    }
+
+
+
+    @Test
     void testGenerale1() throws FileNotFoundException, SyntacticException {
         NodeProgram nP = new Parser(new Scanner(testPath + "generale1.txt")).parse();
         var tcVisit = new TypeCheckingVisitor();

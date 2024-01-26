@@ -3,7 +3,7 @@ package AST;
 import visitor.IVisitor;
 
 /**
- * Rappresenta un nodo nell'Albero della Sintassi Astratta (AST) che rappresenta una costante.
+ * Rappresenta un nodo nell'AST che rappresenta una costante.
  */
 public class NodeConst extends NodeExpr {
     private final String value;
