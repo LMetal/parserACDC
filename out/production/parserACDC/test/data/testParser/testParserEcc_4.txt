@@ -1,2 +1,0 @@
-int a;
-print 1;

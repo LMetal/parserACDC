@@ -1,5 +1,0 @@
-print stampa;
-float numberfloat;
-int floati;
-a += 5 + 3;
-b = a + 5;
