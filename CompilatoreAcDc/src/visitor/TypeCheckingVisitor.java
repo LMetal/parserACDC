@@ -70,6 +70,9 @@ public class TypeCheckingVisitor implements IVisitor{
     }
 
     /**
+     * Aggiunge il nuovo id nella SymbolTable, se c'e' inizializzazione genera il codice.
+     * Ritorna ERROR se id e' gia' stato dichiarato.
+     *
      * @param node NodeDecl da visitare
      */
     @Override
@@ -104,6 +107,8 @@ public class TypeCheckingVisitor implements IVisitor{
     }
 
     /**
+     * Controlla tipo della parte desta e sinistra, se niente e' ERROR ritorna il tipo.
+     *
      * @param node NodeBinOp da visitare
      */
     @Override
@@ -137,6 +142,8 @@ public class TypeCheckingVisitor implements IVisitor{
     }
 
     /**
+     * Ritorna FLOAT. Se e' presente un nodeConvert l'espressione e' sicuramente valida e FLOAT.
+     *
      * @param nodeConvert NodeConvert da visitare
      */
     @Override
@@ -145,6 +152,8 @@ public class TypeCheckingVisitor implements IVisitor{
     }
 
     /**
+     * Ritorna il tipo della costante
+     *
      * @param nodeConst NodeConst da visitare
      */
     @Override
@@ -154,6 +163,8 @@ public class TypeCheckingVisitor implements IVisitor{
     }
 
     /**
+     * Passa la visita all'id contenuto
+     *
      * @param nodeDeref NodeDeref da visitare
      */
     @Override
@@ -162,6 +173,8 @@ public class TypeCheckingVisitor implements IVisitor{
     }
 
     /**
+     * Controlla che l'id non sia ERROR, ritorna OK.
+     *
      * @param nodePrint NodePrint da visitare
      */
     @Override
@@ -173,6 +186,10 @@ public class TypeCheckingVisitor implements IVisitor{
     }
 
     /**
+     * Controlla che ne id ne expr siano ERROR.
+     * Controlla che i tipi siano compatibili.
+     * Ritorna OK.
+     *
      * @param nodeAssign NodeAssign da visitare
      */
     @Override
@@ -191,6 +208,7 @@ public class TypeCheckingVisitor implements IVisitor{
             resType = exprRes;
             return;
         }
+
 
         //se sto assegnando un float a un id INT ERRORE
         if(idRes.getTypeTD() == TypeTD.INT && exprRes.getTypeTD() == TypeTD.FLOAT){
